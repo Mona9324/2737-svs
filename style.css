@@ -36,18 +36,28 @@ padding:20px;
 }
 
 .slot{
+
 padding:14px;
-border-radius:12px;
+border-radius:10px;
 cursor:pointer;
+background:#f5efe4;
+
 }
 
 .available{
-background:#e6f4ea;
+
+border:2px solid #7bbf7b;
+
 }
 
 .reserved{
-background:#f8e6e6;
+
+border:2px solid #d37a7a;
+
+background:#f3e1e1;
+
 }
+
 
 .modal{
 display:none;
