@@ -2,9 +2,10 @@ let currentBuff="monday"
 let selectedSlot=null
 
 const ADMIN_PASSWORD="2737admin"
+
 const svsDate=new Date("2026-03-23T00:00:00Z")
 
-let bookingLocked=true
+let bookingOpen=false
 
 const grid=document.getElementById("slots")
 
@@ -25,6 +26,16 @@ document.getElementById("countdown").innerHTML=
 setInterval(updateCountdown,60000)
 updateCountdown()
 
+db.collection("settings").doc("booking").onSnapshot(doc=>{
+
+if(doc.exists){
+bookingOpen=doc.data().open
+}
+
+loadSlots()
+
+})
+
 function loadSlots(){
 
 db.collection("slots").onSnapshot(snapshot=>{
@@ -41,44 +52,11 @@ updateCounts(data)
 
 }
 
-function openAdmin(){
-
-let pass=prompt("Admin Password")
-
-if(pass!==ADMIN_PASSWORD){
-
-alert("Wrong password")
-return
-
-}
-
-document.getElementById("adminPanel").style.display="block"
-
-}
-
-function closeAdmin(){
-
-document.getElementById("adminPanel").style.display="none"
-
-}
-
-function openBooking(){
-
-bookingLocked=false
-alert("Booking OPENED")
-
-}
-
-function lockBooking(){
-
-bookingLocked=true
-alert("Booking LOCKED")
-
-}
-
 function switchBuff(buff){
+
 currentBuff=buff
 loadSlots()
+
 }
 
 function generateSlots(data){
@@ -89,13 +67,14 @@ for(let h=0;h<24;h++){
 for(let m=0;m<60;m+=30){
 
 let time=String(h).padStart(2,"0")+":"+String(m).padStart(2,"0")
+
 let id=currentBuff+"_"+time
 
 let div=document.createElement("div")
 
 let slot=data[id]
 
-if(bookingLocked){
+if(!bookingOpen){
 
 div.className="slot locked"
 div.innerHTML="<b>"+time+"</b><br>🔒 Locked"
@@ -139,12 +118,17 @@ document.getElementById("availableCount").innerText=total-reserved
 }
 
 function openModal(id){
+
 selectedSlot=id
+
 document.getElementById("modal").style.display="flex"
+
 }
 
 function closeModal(){
+
 document.getElementById("modal").style.display="none"
+
 }
 
 function confirmBooking(){
@@ -153,10 +137,24 @@ let alliance=document.getElementById("alliance").value
 let player=document.getElementById("player").value
 let password=document.getElementById("password").value
 
+let days=parseInt(document.getElementById("daysSaved").value)
+
+let required=getMinDaysRequired()
+
+if(days<required){
+
+alert("You need "+required+" days saved")
+
+return
+
+}
+
 db.collection("slots").doc(selectedSlot).set({
+
 alliance,
 player,
 password
+
 })
 
 closeModal()
@@ -168,35 +166,70 @@ function cancelSlot(id,password){
 let pass=prompt("Enter password")
 
 if(pass===ADMIN_PASSWORD){
+
 db.collection("slots").doc(id).delete()
 return
+
 }
 
 if(pass!==password){
+
 alert("Wrong password")
 return
+
 }
 
 db.collection("slots").doc(id).delete()
 
 }
 
-function adminUnlock(){
+function getMinDaysRequired(){
+
+let now=new Date()
+
+let diff=(svsDate-now)/(1000*60*60*24)
+
+if(diff<=1) return 0
+if(diff<=2) return 15
+if(diff<=3) return 30
+
+return 999
+
+}
+
+function openAdmin(){
+
+document.getElementById("adminPanel").style.display="block"
+
+}
+
+function closeAdmin(){
+
+document.getElementById("adminPanel").style.display="none"
+
+}
+
+function adminLogin(){
 
 let pass=document.getElementById("adminPass").value
 
 if(pass!==ADMIN_PASSWORD){
+
 alert("Wrong password")
 return
+
 }
 
 document.getElementById("adminControls").style.display="block"
 
 }
 
-function toggleBooking(){
-bookingLocked=!bookingLocked
-alert("Booking lock toggled")
+function setBooking(state){
+
+db.collection("settings").doc("booking").set({
+open:state
+})
+
 }
 
 function clearAll(){
@@ -204,9 +237,11 @@ function clearAll(){
 if(!confirm("Delete all bookings?")) return
 
 db.collection("slots").get().then(snapshot=>{
+
 snapshot.forEach(doc=>{
 doc.ref.delete()
 })
+
 })
 
 }
@@ -222,12 +257,14 @@ canvas.height=window.innerHeight
 let snow=[]
 
 for(let i=0;i<120;i++){
+
 snow.push({
 x:Math.random()*canvas.width,
 y:Math.random()*canvas.height,
 r:Math.random()*3,
 d:Math.random()*1
 })
+
 }
 
 function drawSnow(){
