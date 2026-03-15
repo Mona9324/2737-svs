@@ -22,8 +22,6 @@
 <h1>❄ 2737 SVS Booking</h1>
 <div id="countdown"></div>
 
-<button class="adminButton" onclick="openAdmin()">⚙ Admin</button>
-
 </header>
 
 <div class="tabs">
@@ -52,6 +50,8 @@
 
 <input id="player" placeholder="Player Name">
 
+<input id="daysSaved" type="number" placeholder="Days Saved">
+
 <input id="password" type="password" placeholder="Cancel Password">
 
 <button onclick="confirmBooking()">Reserve</button> <button onclick="closeModal()">Cancel</button>
@@ -60,13 +60,21 @@
 
 </div>
 
+<button class="adminFloating" onclick="openAdmin()">⚙ Admin</button>
+
 <div id="adminPanel" class="adminPanel">
 
 <h3>Admin Dashboard</h3>
 
-<button onclick="openBooking()">🔓 Open Booking</button> <button onclick="lockBooking()">🔒 Lock Booking</button>
+<input id="adminPass" type="password" placeholder="Admin Password">
 
-<button onclick="clearAll()">🧹 Clear All Slots</button>
+<button onclick="adminLogin()">Login</button>
+
+<div id="adminControls">
+
+<button onclick="openBooking()">🔓 Open Booking</button> <button onclick="lockBooking()">🔒 Lock Booking</button> <button onclick="clearAll()">🧹 Clear All Slots</button>
+
+</div>
 
 <button onclick="closeAdmin()">Close</button>
 
