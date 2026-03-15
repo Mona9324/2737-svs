@@ -182,6 +182,7 @@ let available=total-reserved
 document.getElementById("reservedCount").innerText=reserved
 document.getElementById("availableCount").innerText=available
 
+
 })
 
 }
