@@ -1,28 +1,37 @@
 <!DOCTYPE html>
-<html>
 
+<html lang="en">
 <head>
 
 <meta charset="UTF-8">
-<title>WOS SVS Minister Booking</title>
+<meta name="viewport" content="width=device-width,initial-scale=1">
+
+<title>2737 SvS Booking</title>
 
 <link rel="stylesheet" href="style.css">
 
-<script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-database-compat.js"></script>
-
 </head>
-
 
 <body>
 
-<h1>Whiteout Survival</h1>
-<h2>SVS Minister Booking</h2>
+<header>
 
-<div id="grid"></div>
+<h1>❄ 2737 SvS Booking</h1>
 
-<script src="script.js"></script>
+<div id="countdown"></div>
+
+</header>
+
+<div class="tabs">
+
+<button onclick="switchBuff('construction')">🏗 Construction</button> <button onclick="switchBuff('research')">🔬 Research</button> <button onclick="switchBuff('training')">🛡 Training</button>
+
+</div>
+
+<div class="grid" id="slots"></div>
+
+<script src="app.js"></script>
 
 </body>
-
 </html>
+
