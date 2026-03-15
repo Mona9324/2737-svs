@@ -14,22 +14,6 @@ font-size:18px;
 color:#444;
 }
 
-.adminButton{
-position:absolute;
-top:20px;
-right:20px;
-z-index:10;
-}
-
-.adminButton button{
-padding:10px 14px;
-border:none;
-border-radius:10px;
-background:#444;
-color:white;
-cursor:pointer;
-}
-
 .tabs{
 margin:20px;
 display:flex;
@@ -138,24 +122,25 @@ color:white;
 cursor:pointer;
 }
 
-.adminPanel{
-display:none;
+#adminPanel{
 position:fixed;
-bottom:20px;
-left:50%;
-transform:translateX(-50%);
-background:white;
-padding:25px;
-border-radius:14px;
-box-shadow:0 0 20px rgba(0,0,0,0.2);
-z-index:30;
+bottom:0;
+width:100%;
+background:#ffffff;
+padding:10px;
+box-shadow:0 -3px 10px rgba(0,0,0,0.2);
 }
 
-.adminPanel button{
-margin:6px;
-padding:10px 14px;
+#adminControls{
+display:none;
+margin-top:8px;
+}
+
+#adminControls button{
+margin:4px;
+padding:8px 12px;
 border:none;
-border-radius:8px;
+border-radius:6px;
 background:#7da7ff;
 color:white;
 cursor:pointer;
