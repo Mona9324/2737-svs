@@ -146,17 +146,26 @@ function updateCounts(){
 
 db.collection("slots").onSnapshot(snapshot=>{
 
-let reserved=snapshot.size
+let reserved=0
+
+snapshot.forEach(doc=>{
+
+if(doc.id.startsWith(currentBuff)){
+reserved++
+}
+
+})
+
 let total=48
 let available=total-reserved
 
 document.getElementById("reservedCount").innerText=reserved
 document.getElementById("availableCount").innerText=available
 
-
 })
 
 }
+
 
 generateSlots()
 updateStats()
