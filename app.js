@@ -2,19 +2,18 @@ let currentBuff="construction"
 
 const grid=document.getElementById("slots")
 
-const svsDate=new Date("2026-03-14T00:00:00Z")
+const svsDate=new Date("2030-03-23T00:00:00Z")
+
+let selectedSlot=null
 
 function countdown(){
 
 let now=new Date()
-
 let diff=svsDate-now
 
 if(diff<0){
-
 document.getElementById("countdown").innerHTML="SVS Started!"
 return
-
 }
 
 let d=Math.floor(diff/(1000*60*60*24))
@@ -40,17 +39,85 @@ for(let m=0;m<60;m+=30){
 let time=
 String(h).padStart(2,"0")+":"+String(m).padStart(2,"0")
 
+let id=currentBuff+"_"+time
+
 let div=document.createElement("div")
 
-div.className="slot"
+db.collection("slots").doc(id).onSnapshot(doc=>{
 
-div.innerHTML=`<b>${time} UTC</b> <br>Available`
+let data=doc.data()
+
+if(!data){
+
+div.className="slot available"
+
+div.innerHTML=`<b>${time}</b><br>Available`
+
+div.onclick=()=>openModal(id)
+
+}else{
+
+div.className="slot reserved"
+
+div.innerHTML=`<b>${time}</b><br>[${data.alliance}] ${data.player}`
+
+div.onclick=()=>cancelSlot(id,data.password)
+
+}
+
+})
 
 grid.appendChild(div)
 
 }
 
 }
+
+}
+
+function openModal(id){
+
+selectedSlot=id
+document.getElementById("modal").style.display="flex"
+
+}
+
+function closeModal(){
+
+document.getElementById("modal").style.display="none"
+
+}
+
+function confirmBooking(){
+
+let alliance=document.getElementById("alliance").value
+let player=document.getElementById("player").value
+let password=document.getElementById("password").value
+
+db.collection("slots").doc(selectedSlot).set({
+
+alliance,
+player,
+password
+
+})
+
+closeModal()
+
+}
+
+function cancelSlot(id,password){
+
+let pass=prompt("Cancel password")
+
+if(pass!==password){
+
+alert("Wrong password")
+return
+
+}
+
+db.collection("slots").doc(id).delete()
 
 }
 
