@@ -173,6 +173,10 @@ cursor:pointer;
 
 }
 
+#adminControls{
+display:none;
+}
+
 #snow{
 position:fixed;
 top:0;
