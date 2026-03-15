@@ -152,6 +152,12 @@ return
 
 }
 
+let panel=document.getElementById("adminPanel")
+
+panel.style.display="block"
+
+}
+
 document.getElementById("adminPanel").style.display="block"
 
 }
