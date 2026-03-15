@@ -1,27 +1,24 @@
-let bookingLocked=true
-db.collection("settings").doc("booking").onSnapshot(doc=>{
-
-if(doc.exists){
-
-bookingLocked=doc.data().locked
-
-generateSlots()
-
-}
-
-})
-
 let currentBuff="monday"
 let selectedSlot=null
 
 const ADMIN_PASSWORD="2737admin"
 
-const DAY1_OPEN=new Date("2026-03-20T12:00:00Z")
-const DAY2_OPEN=new Date("2026-03-21T12:00:00Z")
-
 const svsDate=new Date("2026-03-23T00:00:00Z")
 
+let bookingLocked=true
+
 const grid=document.getElementById("slots")
+
+db.collection("settings").doc("booking").onSnapshot(doc=>{
+
+if(doc.exists){
+
+bookingLocked=doc.data().locked
+generateSlots()
+
+}
+
+})
 
 function updateCountdown(){
 
@@ -62,26 +59,11 @@ let id=currentBuff+"_"+time
 
 let div=document.createElement("div")
 
-let now=new Date()
-
-let locked=false
-
-if(currentBuff==="monday" && now<DAY1_OPEN) locked=true
-if(currentBuff!=="monday" && now<DAY2_OPEN) locked=true
-
 db.collection("slots").doc(id).onSnapshot(doc=>{
 
 let data=doc.data()
 
 if(bookingLocked){
-
-div.className="slot locked"
-div.innerHTML="<b>"+time+" UTC</b><br>🔒 Booking Locked"
-
-}
-else if(locked){
-  
-if(locked){
 
 div.className="slot locked"
 div.innerHTML="<b>"+time+" UTC</b><br>🔒 Locked"
@@ -159,20 +141,54 @@ db.collection("slots").doc(id).delete()
 
 }
 
-function adminLogin(){
+function openAdmin(){
 
 let pass=prompt("Admin Password")
 
 if(pass!==ADMIN_PASSWORD){
 
-alert("Wrong Password")
+alert("Wrong password")
 return
 
 }
 
-let slot=prompt("Enter Slot ID to delete")
+document.getElementById("adminPanel").style.display="block"
 
-db.collection("slots").doc(slot).delete()
+}
+
+function closeAdmin(){
+
+document.getElementById("adminPanel").style.display="none"
+
+}
+
+function toggleBooking(){
+
+bookingLocked=!bookingLocked
+
+db.collection("settings").doc("booking").set({
+
+locked:bookingLocked
+
+})
+
+}
+
+function clearAll(){
+
+let confirmClear=confirm("Delete all bookings?")
+
+if(!confirmClear) return
+
+db.collection("slots").get().then(snapshot=>{
+
+snapshot.forEach(doc=>{
+
+doc.ref.delete()
+
+})
+
+})
 
 }
 
@@ -199,79 +215,3 @@ document.getElementById("availableCount").innerText=total-reserved
 
 generateSlots()
 updateCounts()
-
-const canvas=document.getElementById("snow")
-const ctx=canvas.getContext("2d")
-
-canvas.width=window.innerWidth
-canvas.height=window.innerHeight
-
-let snow=[]
-
-for(let i=0;i<120;i++){
-
-snow.push({
-x:Math.random()*canvas.width,
-y:Math.random()*canvas.height,
-r:Math.random()*3,
-d:Math.random()*1
-})
-
-}
-
-function drawSnow(){
-
-ctx.clearRect(0,0,canvas.width,canvas.height)
-
-ctx.fillStyle="rgba(200,220,255,0.8)"
-
-ctx.beginPath()
-
-for(let i=0;i<snow.length;i++){
-
-let f=snow[i]
-
-ctx.moveTo(f.x,f.y)
-ctx.arc(f.x,f.y,f.r,0,Math.PI*2)
-
-}
-
-ctx.fill()
-
-snow.forEach(f=>{
-
-f.y+=f.d
-
-if(f.y>canvas.height){
-
-f.y=0
-f.x=Math.random()*canvas.width
-
-}
-
-})
-
-}
-
-setInterval(drawSnow,33)
-
-function toggleLock(){
-
-let pass=prompt("Admin Password")
-
-if(pass!==ADMIN_PASSWORD){
-
-alert("Wrong password")
-return
-
-}
-
-bookingLocked=!bookingLocked
-
-db.collection("settings").doc("booking").set({
-
-locked:bookingLocked
-
-})
-
-}
