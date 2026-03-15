@@ -1,3 +1,5 @@
+let adminLogged=false
+
 let currentBuff="monday"
 let selectedSlot=null
 
@@ -220,11 +222,22 @@ return
 
 }
 
+adminLogged=true
+
 document.getElementById("adminControls").style.display="block"
+
+alert("Admin login successful")
 
 }
 
 function setBooking(state){
+
+if(!adminLogged){
+
+alert("Admin login required")
+return
+
+}
 
 db.collection("settings").doc("booking").set({
 open:state
@@ -234,7 +247,14 @@ open:state
 
 function clearAll(){
 
-if(!confirm("Delete all bookings?")) return
+if(!adminLogged){
+
+alert("Admin login required")
+return
+
+}
+
+if(!confirm("Delete ALL bookings?")) return
 
 db.collection("slots").get().then(snapshot=>{
 
