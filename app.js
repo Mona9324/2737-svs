@@ -1,23 +1,19 @@
-const BOOKING_OPEN = new Date("2026-03-20T12:00:00Z")
-
 let currentBuff="monday"
 let selectedSlot=null
 
 const ADMIN_PASSWORD="2737admin"
 
-const grid=document.getElementById("slots")
+const DAY1_OPEN=new Date("2026-03-20T12:00:00Z")
+const DAY2_OPEN=new Date("2026-03-21T12:00:00Z")
 
 const svsDate=new Date("2026-03-23T00:00:00Z")
+
+const grid=document.getElementById("slots")
 
 function updateCountdown(){
 
 let now=new Date()
 let diff=svsDate-now
-
-if(diff<0){
-document.getElementById("countdown").innerHTML="SVS Started!"
-return
-}
 
 let d=Math.floor(diff/(1000*60*60*24))
 let h=Math.floor((diff/(1000*60*60))%24)
@@ -30,25 +26,6 @@ document.getElementById("countdown").innerHTML=
 
 setInterval(updateCountdown,60000)
 updateCountdown()
-
-function updateClocks(){
-
-let now=new Date()
-
-let utc=now.toUTCString().slice(17,22)
-
-let local=now.toLocaleTimeString([],{
-hour:'2-digit',
-minute:'2-digit'
-})
-
-document.getElementById("utcClock").innerHTML="UTC Time: "+utc
-document.getElementById("localClock").innerHTML="Local Time: "+local
-
-}
-
-setInterval(updateClocks,1000)
-updateClocks()
 
 function switchBuff(buff){
 
@@ -72,40 +49,33 @@ let id=currentBuff+"_"+time
 
 let div=document.createElement("div")
 
-let utcDate=new Date()
-utcDate.setUTCHours(h)
-utcDate.setUTCMinutes(m)
+let now=new Date()
 
-let local=utcDate.toLocaleTimeString([],{
-hour:'2-digit',
-minute:'2-digit'
-})
+let locked=false
+
+if(currentBuff==="monday" && now<DAY1_OPEN) locked=true
+if(currentBuff!=="monday" && now<DAY2_OPEN) locked=true
 
 db.collection("slots").doc(id).onSnapshot(doc=>{
 
 let data=doc.data()
 
-let now=new Date()
+if(locked){
 
-if(now<BOOKING_OPEN){
-
-div.className="slot"
+div.className="slot locked"
 div.innerHTML="<b>"+time+" UTC</b><br>🔒 Locked"
-div.onclick=null
 
 }else if(!data){
-  
-if(!data){
 
 div.className="slot available"
-div.innerHTML="<b>"+time+" UTC</b><br>"+local+" Local<br>Available"
+div.innerHTML="<b>"+time+" UTC</b><br>Available"
 
 div.onclick=()=>openModal(id)
 
 }else{
 
 div.className="slot reserved"
-div.innerHTML="<b>"+time+" UTC</b><br>"+local+" Local<br>"+data.alliance+" - "+data.player
+div.innerHTML="<b>"+time+" UTC</b><br>"+data.alliance+" - "+data.player
 
 div.onclick=()=>cancelSlot(id,data.password)
 
@@ -168,6 +138,23 @@ db.collection("slots").doc(id).delete()
 
 }
 
+function adminLogin(){
+
+let pass=prompt("Admin Password")
+
+if(pass!==ADMIN_PASSWORD){
+
+alert("Wrong Password")
+return
+
+}
+
+let slot=prompt("Enter Slot ID to delete")
+
+db.collection("slots").doc(slot).delete()
+
+}
+
 function updateCounts(){
 
 db.collection("slots").onSnapshot(snapshot=>{
@@ -176,17 +163,14 @@ let reserved=0
 
 snapshot.forEach(doc=>{
 
-if(doc.id.startsWith(currentBuff)){
-reserved++
-}
+if(doc.id.startsWith(currentBuff)) reserved++
 
 })
 
 let total=48
-let available=total-reserved
 
 document.getElementById("reservedCount").innerText=reserved
-document.getElementById("availableCount").innerText=available
+document.getElementById("availableCount").innerText=total-reserved
 
 })
 
@@ -201,17 +185,15 @@ const ctx=canvas.getContext("2d")
 canvas.width=window.innerWidth
 canvas.height=window.innerHeight
 
-let snowflakes=[]
+let snow=[]
 
 for(let i=0;i<120;i++){
 
-snowflakes.push({
-
+snow.push({
 x:Math.random()*canvas.width,
 y:Math.random()*canvas.height,
-r:Math.random()*3+1,
+r:Math.random()*3,
 d:Math.random()*1
-
 })
 
 }
@@ -220,33 +202,24 @@ function drawSnow(){
 
 ctx.clearRect(0,0,canvas.width,canvas.height)
 
-ctx.fillStyle="rgba(200,220,255,0.9)"
+ctx.fillStyle="rgba(200,220,255,0.8)"
 
 ctx.beginPath()
 
-for(let i=0;i<snowflakes.length;i++){
+for(let i=0;i<snow.length;i++){
 
-let f=snowflakes[i]
+let f=snow[i]
 
 ctx.moveTo(f.x,f.y)
-ctx.arc(f.x,f.y,f.r,0,Math.PI*2,true)
+ctx.arc(f.x,f.y,f.r,0,Math.PI*2)
 
 }
 
 ctx.fill()
 
-moveSnow()
-
-}
-
-function moveSnow(){
-
-for(let i=0;i<snowflakes.length;i++){
-
-let f=snowflakes[i]
+snow.forEach(f=>{
 
 f.y+=f.d
-f.x+=Math.sin(f.y*0.01)
 
 if(f.y>canvas.height){
 
@@ -255,7 +228,7 @@ f.x=Math.random()*canvas.width
 
 }
 
-}
+})
 
 }
 
