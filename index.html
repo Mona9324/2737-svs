@@ -60,19 +60,30 @@
 
 </div>
 
+<div id="copyBox" class="copyBox">
+
+<div id="copyText"></div>
+
+<button onclick="copyDiscord()">Copy for Discord</button>
+
+</div>
+
 <button class="adminFloating" onclick="openAdmin()">⚙ Admin</button>
 
 <div id="adminPanel" class="adminPanel">
 
 <h3>Admin Dashboard</h3>
 
-<input id="adminPass" type="password" placeholder="Admin Password">
+<div id="adminLogin">
 
+<input id="adminPass" type="password" placeholder="Admin Password">
 <button onclick="adminLogin()">Login</button>
+
+</div>
 
 <div id="adminControls">
 
-<button onclick="openBooking()">🔓 Open Booking</button> <button onclick="lockBooking()">🔒 Lock Booking</button> <button onclick="clearAll()">🧹 Clear All Slots</button>
+<button onclick="setBooking(true)">🔓 Open Booking</button> <button onclick="setBooking(false)">🔒 Lock Booking</button> <button onclick="clearAll()">🧹 Clear All Slots</button>
 
 </div>
 
