@@ -1,57 +1,44 @@
 body{
-
 font-family:Arial;
 background:#eef5fb;
 margin:0;
 text-align:center;
-
 }
 
 header{
-
 padding:20px;
-
 }
 
 #countdown{
-
 font-size:18px;
 color:#444;
-
 }
 
 .adminButton{
-
 position:absolute;
 top:20px;
 right:20px;
 z-index:10;
-
 }
 
 .adminButton button{
-
 padding:10px 14px;
 border:none;
 border-radius:10px;
 background:#444;
 color:white;
 cursor:pointer;
-
 }
 
 .tabs{
-
 margin:20px;
 display:flex;
 justify-content:center;
 gap:12px;
 flex-wrap:wrap;
-
 }
 
 .tabs button{
-
 padding:14px 22px;
 border:none;
 border-radius:14px;
@@ -59,79 +46,61 @@ background:#7da7ff;
 color:white;
 font-weight:bold;
 cursor:pointer;
-
 }
 
 .slotStats{
-
 margin:10px;
-
 }
 
 .availableDot{
-
 width:10px;
 height:10px;
 background:#8fcf8f;
 display:inline-block;
 border-radius:50%;
-
 }
 
 .reservedDot{
-
 width:10px;
 height:10px;
 background:#d88989;
 display:inline-block;
 border-radius:50%;
 margin-left:14px;
-
 }
 
 .grid{
-
 display:grid;
 grid-template-columns:repeat(4,1fr);
 gap:14px;
 padding:20px;
 max-width:900px;
 margin:auto;
-
 }
 
 .slot{
-
 background:#fffaf2;
 padding:14px;
 border-radius:12px;
 cursor:pointer;
-
 }
 
 .available{
-
 border:2px solid #9bd39b;
-
 }
 
 .reserved{
-
 border:2px solid #d88989;
 background:#f7eaea;
-
 }
 
 .locked{
-
 border:2px solid #aaa;
 background:#eeeeee;
 cursor:not-allowed;
-
 }
 
 .modal{
-
 display:none;
 position:fixed;
 top:0;
@@ -141,11 +110,10 @@ height:100%;
 background:rgba(0,0,0,0.4);
 align-items:center;
 justify-content:center;
-
+z-index:20;
 }
 
 .modalBox{
-
 background:white;
 padding:24px;
 border-radius:14px;
@@ -153,30 +121,24 @@ display:flex;
 flex-direction:column;
 gap:10px;
 width:260px;
-
 }
 
 .modalBox input{
-
 padding:10px;
 border-radius:8px;
 border:1px solid #ccc;
-
 }
 
 .modalBox button{
-
 padding:10px;
 border:none;
 border-radius:8px;
 background:#7da7ff;
 color:white;
 cursor:pointer;
-
 }
 
 .adminPanel{
-
 display:none;
 position:fixed;
 bottom:20px;
@@ -186,12 +148,10 @@ background:white;
 padding:25px;
 border-radius:14px;
 box-shadow:0 0 20px rgba(0,0,0,0.2);
-z-index:20;
-
+z-index:30;
 }
 
 .adminPanel button{
-
 margin:6px;
 padding:10px 14px;
 border:none;
@@ -199,7 +159,6 @@ border-radius:8px;
 background:#7da7ff;
 color:white;
 cursor:pointer;
-
 }
 
 #snow{
@@ -213,9 +172,7 @@ z-index:0;
 }
 
 @media(max-width:600px){
-
 .grid{
 grid-template-columns:1fr 1fr;
 }
-
 }
