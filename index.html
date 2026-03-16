@@ -1,5 +1,4 @@
 <!DOCTYPE html>
-
 <html>
 <head>
 
@@ -24,9 +23,11 @@
 
 <div class="slotStats">
 
-<span class="availableDot"></span> <span id="availableCount">0</span>
+<span class="availableDot"></span>
+<span id="availableCount">Available 0</span>
 
-<span class="reservedDot"></span> <span id="reservedCount">0</span>
+<span class="reservedDot"></span>
+<span id="reservedCount">Reserved 0</span>
 
 </div>
 
@@ -34,7 +35,9 @@
 
 <div class="tabs">
 
-<button onclick="switchBuff('monday')">Monday (Construction)</button> <button onclick="switchBuff('tuesday')">Tuesday (Research)</button> <button onclick="switchBuff('thursday')">Thursday (Training)</button>
+<button onclick="switchBuff('monday')">Monday (Construction)</button>
+<button onclick="switchBuff('tuesday')">Tuesday (Research)</button>
+<button onclick="switchBuff('thursday')">Thursday (Training)</button>
 
 </div>
 
@@ -45,19 +48,14 @@
 <div class="modalBox">
 
 <h3>Reserve Slot</h3>
-<p style="font-size:12px;color:#777">
-Priority is based on Days Saved
-</p>
 
 <input id="alliance" placeholder="Alliance">
-
 <input id="player" placeholder="Player">
-
-<input id="daysSaved" type="number" placeholder="Days Saved">
-
+<input id="daysSaved" type="number" placeholder="Speed-up Days">
 <input id="password" type="password" placeholder="Cancel Password">
 
-<button onclick="confirmBooking()">Reserve</button> <button onclick="closeModal()">Cancel</button>
+<button onclick="confirmBooking()">Reserve</button>
+<button onclick="closeModal()">Cancel</button>
 
 </div>
 
@@ -67,31 +65,31 @@ Priority is based on Days Saved
 
 <div id="adminPanel" class="adminPanel">
 
-<h3>관리자 패널</h3>
+<h3>Admin Panel</h3>
 
 <div id="adminLogin">
 
-<input id="adminPass" type="password" placeholder="관리자 비밀번호">
-<button onclick="adminLogin()">로그인</button>
+<input id="adminPass" type="password" placeholder="Admin Password">
+<button onclick="adminLogin()">Login</button>
 
 </div>
 
 <div id="adminControls">
 
-<button onclick="setBooking(true)">예약 열기</button> <button onclick="setBooking(false)">예약 잠금</button> <button onclick="clearAll()">전체 예약 삭제</button>
+<button onclick="setBooking(true)">Open Booking</button>
+<button onclick="setBooking(false)">Lock Booking</button>
+<button onclick="clearAll()">Clear All</button>
 
 </div>
 
-<button onclick="closeAdmin()">닫기</button>
+<button onclick="closeAdmin()">Close</button>
 
 </div>
 
 <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app-compat.js"></script>
-
 <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore-compat.js"></script>
 
 <script src="firebase.js"></script>
-
 <script src="app.js"></script>
 
 </body>
