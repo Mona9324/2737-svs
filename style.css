@@ -1,182 +1,240 @@
-body{
-    font-family:Arial;
-    background:#eef5fb;
-    margin:0;
-    text-align:center;
+body {
+    font-family: Arial;
+    background: #eef5fb;
+    margin: 0;
+    text-align: center;
 }
 
 /* HEADER */
-header{
-    padding:20px;
-    position:relative;
-    z-index:2;
+header {
+    padding: 20px;
+    position: relative;
+    z-index: 2;
 }
-#countdown{
-    margin-top:5px;
-    font-weight:bold;
+
+#countdown {
+    margin-top: 5px;
+    font-weight: bold;
 }
-#ranking{
-    position:absolute;
-    top:20px;
-    right:20px;
-    text-align:left;
+
+#ranking {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    text-align: left;
 }
 
 /* TABS */
-.tabs{
-    margin:20px auto;
-    max-width:1100px;
-    display:grid;
-    grid-template-columns:repeat(3,1fr);
-    gap:12px;
-    padding:0 20px;
+.tabs {
+    margin: 20px auto;
+    max-width: 1100px;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 12px;
+    padding: 0 20px;
 }
-.tabs button{
-    padding:16px;
-    border:none;
-    border-radius:12px;
-    background:#a0c4ff;
-    color:white;
-    font-weight:bold;
-    cursor:pointer;
-    font-size:15px;
+
+.tabs button {
+    padding: 16px;
+    border: none;
+    border-radius: 12px;
+    background: #a0c4ff;
+    color: white;
+    font-weight: bold;
+    cursor: pointer;
+    font-size: 15px;
 }
-.tabs button.active{
-    background:#7da7ff;
+
+.tabs button.active {
+    background: #7da7ff;
 }
 
 /* SLOT STATS */
-.slotStats{
-    margin-top:10px;
-    margin-bottom:10px;
-    font-size:18px;
+.slotStats {
+    margin-top: 10px;
+    margin-bottom: 10px;
+    font-size: 18px;
 }
-.availableDot{
-    width:10px;
-    height:10px;
-    background:#66cc66;
-    display:inline-block;
-    border-radius:50%;
-    margin-right:6px;
+
+.availableDot {
+    width: 10px;
+    height: 10px;
+    background: #66cc66;
+    display: inline-block;
+    border-radius: 50%;
+    margin-right: 6px;
 }
-.reservedDot{
-    width:10px;
-    height:10px;
-    background:#e06666;
-    display:inline-block;
-    border-radius:50%;
-    margin-left:20px;
-    margin-right:6px;
+
+.reservedDot {
+    width: 10px;
+    height: 10px;
+    background: #e06666;
+    display: inline-block;
+    border-radius: 50%;
+    margin-left: 20px;
+    margin-right: 6px;
 }
 
 /* GRID */
-.grid{
-    display:grid;
-    grid-template-columns:repeat(4,1fr);
-    gap:16px;
-    padding:20px;
-    max-width:1100px;
-    margin:auto;
-    position:relative;
-    z-index:2;
+.grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 16px;
+    padding: 20px;
+    max-width: 1100px;
+    margin: auto;
+    position: relative;
+    z-index: 2;
 }
 
-.slot{
-    background:#ffffff;
-    padding:10px 14px;
-    border-radius:12px;
-    min-height:70px;
-    text-align:left;
-    cursor:pointer;
+/* SLOT */
+.slot {
+    background: #ffffff;
+    padding: 10px 14px;
+    border-radius: 12px;
+    min-height: 70px;
+    text-align: left;
+    cursor: pointer;
 }
-.slot.available{border:2px solid #66cc66;}
-.slot.reserved{border:2px solid #e06666; background:#fdecec;}
-.slot.locked{border:2px solid #aaa; background:#eee;}
-.slot.selected{background:#7da7ff; color:white;}
+
+.slot.available {
+    border: 2px solid #66cc66;
+}
+
+.slot.reserved {
+    border: 2px solid #e06666;
+    background: #fdecec;
+}
+
+.slot.locked {
+    border: 2px solid #aaa;
+    background: #eee;
+}
+
+.slot.selected {
+    background: #7da7ff;
+    color: white;
+}
 
 /* TIME */
-.timeRow{display:flex; justify-content:space-between; align-items:center;}
-.timeUTC{font-weight:bold; font-size:14px;}
-.statusAvailable{
-    background:#dff5df;
-    color:#2e7d32;
-    padding:2px 10px;
-    border-radius:20px;
-    font-size:11px;
-    font-weight:bold;
+.timeRow {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
 }
-.statusReserved{
-    background:#f9dede;
-    color:#b71c1c;
-    padding:2px 10px;
-    border-radius:20px;
-    font-size:11px;
-    font-weight:bold;
+
+.timeUTC {
+    font-weight: bold;
+    font-size: 14px;
 }
-.timeLocal{font-size:12px; color:#666; margin-top:2px;}
-.bookingInfo{font-size:12px; margin-top:6px;}
+
+.statusAvailable {
+    background: #dff5df;
+    color: #2e7d32;
+    padding: 2px 10px;
+    border-radius: 20px;
+    font-size: 11px;
+    font-weight: bold;
+}
+
+.statusReserved {
+    background: #f9dede;
+    color: #b71c1c;
+    padding: 2px 10px;
+    border-radius: 20px;
+    font-size: 11px;
+    font-weight: bold;
+}
+
+.timeLocal {
+    font-size: 12px;
+    color: #666;
+    margin-top: 2px;
+}
+
+.bookingInfo {
+    font-size: 12px;
+    margin-top: 6px;
+}
 
 /* MODAL */
-.modal{
-    display:none;
-    position:fixed;
-    top:0;
-    left:0;
-    width:100%;
-    height:100%;
-    background:rgba(0,0,0,0.4);
-    align-items:center;
-    justify-content:center;
-    z-index:10000;
+.modal {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.4);
+    align-items: center;
+    justify-content: center;
+    z-index: 10000;
 }
-.modalBox{
-    background:white;
-    padding:24px;
-    border-radius:14px;
-    display:flex;
-    flex-direction:column;
-    gap:10px;
-    width:260px;
+
+.modalBox {
+    background: white;
+    padding: 24px;
+    border-radius: 14px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    width: 260px;
 }
-.modalBox input{padding:10px; border-radius:8px; border:1px solid #ccc;}
-.modalBox button{padding:10px; border:none; border-radius:8px; background:#7da7ff; color:white; cursor:pointer;}
+
+.modalBox input {
+    padding: 10px;
+    border-radius: 8px;
+    border: 1px solid #ccc;
+}
+
+.modalBox button {
+    padding: 10px;
+    border: none;
+    border-radius: 8px;
+    background: #7da7ff;
+    color: white;
+    cursor: pointer;
+}
 
 /* ADMIN BUTTON */
-.adminFloating{
-    position:fixed;
-    bottom:20px;
-    right:20px;
-    background:#7da7ff;
-    color:white;
-    border:none;
-    padding:12px 16px;
-    border-radius:10px;
-    cursor:pointer;
-    z-index:20000;
+.adminFloating {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    background: #7da7ff;
+    color: white;
+    border: none;
+    padding: 12px 16px;
+    border-radius: 10px;
+    cursor: pointer;
+    z-index: 20000;
 }
 
 /* ADMIN PANEL */
-.adminPanel{
-    display:none;
-    position:fixed;
-    top:50%;
-    left:50%;
-    transform:translate(-50%,-50%);
-    background:white;
-    padding:25px;
-    border-radius:14px;
-    box-shadow:0 0 20px rgba(0,0,0,0.25);
-    z-index:20000;
+.adminPanel {
+    display: none;
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background: white;
+    padding: 25px;
+    border-radius: 14px;
+    box-shadow: 0 0 20px rgba(0,0,0,0.25);
+    z-index: 20000;
 }
-#adminControls{display:none;}
+
+#adminControls {
+    display: none;
+}
 
 /* SNOW */
-#snow{
-    position:fixed;
-    top:0;
-    left:0;
-    width:100%;
-    height:100%;
-    pointer-events:none;
-    z-index:1;
+#snow {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    z-index: 1;
 }
