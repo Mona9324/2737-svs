@@ -94,10 +94,17 @@ function openReserveModal(id) {
 
 function closeModal() {
   document.getElementById("modal").classList.remove("show");
-  document.getElementById("alliance").value = "";
-  document.getElementById("player").value = "";
-  document.getElementById("daysSaved").value = "";
-  document.getElementById("password").value = "";
+
+  const allianceEl = document.getElementById("alliance");
+  const playerEl = document.getElementById("player");
+  const daysSavedEl = document.getElementById("daysSaved");
+  const passwordEl = document.getElementById("password");
+
+  if (allianceEl) allianceEl.value = "";
+  if (playerEl) playerEl.value = "";
+  if (daysSavedEl) daysSavedEl.value = "";
+  if (passwordEl) passwordEl.value = "";
+
   selectedSlot = null;
   clearSelection();
 }
@@ -109,7 +116,8 @@ function openCancelModal(id) {
 
 function closeCancelModal() {
   document.getElementById("cancelModal").classList.remove("show");
-  document.getElementById("cancelPassword").value = "";
+  const cancelPasswordEl = document.getElementById("cancelPassword");
+  if (cancelPasswordEl) cancelPasswordEl.value = "";
   selectedSlot = null;
   clearSelection();
 }
@@ -339,6 +347,16 @@ function loadSlots() {
 }
 
 function confirmBooking() {
+  const allianceEl = document.getElementById("alliance");
+  const playerEl = document.getElementById("player");
+  const daysSavedEl = document.getElementById("daysSaved");
+  const passwordEl = document.getElementById("password");
+
+  if (!allianceEl || !playerEl || !daysSavedEl || !passwordEl) {
+    alert("예약 입력창을 찾을 수 없습니다. index.html을 다시 확인해주세요.");
+    return;
+  }
+
   if (!selectedSlot) {
     alert("예약 슬롯을 먼저 선택해주세요.");
     return;
@@ -349,10 +367,10 @@ function confirmBooking() {
     return;
   }
 
-  const alliance = document.getElementById("alliance").value.trim();
-  const player = document.getElementById("player").value.trim();
-  const daysSavedRaw = document.getElementById("daysSaved").value.trim();
-  const password = document.getElementById("password").value;
+  const alliance = allianceEl.value.trim();
+  const player = playerEl.value.trim();
+  const daysSavedRaw = daysSavedEl.value.trim();
+  const password = passwordEl.value;
 
   if (!alliance || !player || !daysSavedRaw || !password) {
     alert("모든 항목을 입력해주세요.");
@@ -401,7 +419,13 @@ function confirmCancel() {
     return;
   }
 
-  const cancelPassword = document.getElementById("cancelPassword").value;
+  const cancelPasswordEl = document.getElementById("cancelPassword");
+  if (!cancelPasswordEl) {
+    alert("취소 입력창을 찾을 수 없습니다.");
+    return;
+  }
+
+  const cancelPassword = cancelPasswordEl.value;
   const docRef = db.collection("slots").doc(selectedSlot);
 
   docRef.get()
