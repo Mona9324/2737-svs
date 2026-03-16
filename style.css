@@ -21,6 +21,7 @@ header {
     position: absolute;
     top: 20px;
     right: 20px;
+    width: 200px;
     text-align: left;
 }
 
@@ -165,7 +166,7 @@ header {
     left: 0;
     width: 100%;
     height: 100%;
-    background: rgba(0, 0, 0, 0.4);
+    background: rgba(0,0,0,0.4);
     align-items: center;
     justify-content: center;
     z-index: 10000;
@@ -179,6 +180,7 @@ header {
     flex-direction: column;
     gap: 10px;
     width: 260px;
+    position: relative;
 }
 
 .modalBox input {
