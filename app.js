@@ -4,13 +4,19 @@ const ADMIN_PASSWORD = "2737admin";
 let adminAuthenticated = false;
 let bookingOpen = false;
 const svsDate = new Date("2026-03-23T00:00:00Z");
+
 const grid = document.getElementById("slots");
+const modal = document.getElementById("modal");
+const cancelModal = document.getElementById("cancelModal");
+const adminPanel = document.getElementById("adminPanel");
+const rankingBox = document.getElementById("rankingBox");
 
 const dbRef = window.db || firebase.firestore();
 
 let bookingUnsubscribe = null;
 let slotsUnsubscribe = null;
 
+/* ---------- countdown ---------- */
 function updateCountdown() {
   const now = new Date();
   const diff = svsDate - now;
@@ -27,6 +33,7 @@ function updateCountdown() {
   document.getElementById("countdown").innerText = `SVS begins in ${d}d ${h}h ${m}m`;
 }
 
+/* ---------- helpers ---------- */
 function padTime(h, m) {
   if (m >= 60) {
     h += Math.floor(m / 60);
@@ -36,13 +43,17 @@ function padTime(h, m) {
   return String(h).padStart(2, "0") + ":" + String(m).padStart(2, "0");
 }
 
-function setActiveTab() {
-  const buttons = document.querySelectorAll(".tabs button");
+function getTabButtons() {
+  return document.querySelectorAll(".tabs button");
+}
+
+function setActiveTab(buff) {
+  const buttons = getTabButtons();
   buttons.forEach((btn) => btn.classList.remove("active"));
 
-  if (currentBuff === "monday" && buttons[0]) buttons[0].classList.add("active");
-  if (currentBuff === "tuesday" && buttons[1]) buttons[1].classList.add("active");
-  if (currentBuff === "thursday" && buttons[2]) buttons[2].classList.add("active");
+  if (buff === "monday" && buttons[0]) buttons[0].classList.add("active");
+  if (buff === "tuesday" && buttons[1]) buttons[1].classList.add("active");
+  if (buff === "thursday" && buttons[2]) buttons[2].classList.add("active");
 }
 
 function clearSelection() {
@@ -54,22 +65,28 @@ function clearSelection() {
 function highlightSlot(div, isAvailable) {
   clearSelection();
   div.classList.add("selected");
-  div.classList.add(isAvailable ? "highlightAvailable" : "highlightReserved");
+  if (isAvailable) {
+    div.classList.add("highlightAvailable");
+  } else {
+    div.classList.add("highlightReserved");
+  }
 }
 
+/* ---------- tab change ---------- */
 function switchBuff(buff) {
   currentBuff = buff;
-  setActiveTab();
+  setActiveTab(buff);
   loadSlots();
 }
 
+/* ---------- modal ---------- */
 function openReserveModal(id) {
   selectedSlot = id;
-  document.getElementById("modal").classList.add("show");
+  modal.classList.add("show");
 }
 
 function closeModal() {
-  document.getElementById("modal").classList.remove("show");
+  modal.classList.remove("show");
   document.getElementById("alliance").value = "";
   document.getElementById("player").value = "";
   document.getElementById("daysSaved").value = "";
@@ -79,21 +96,22 @@ function closeModal() {
 
 function openCancelModal(id) {
   selectedSlot = id;
-  document.getElementById("cancelModal").classList.add("show");
+  cancelModal.classList.add("show");
 }
 
 function closeCancelModal() {
-  document.getElementById("cancelModal").classList.remove("show");
+  cancelModal.classList.remove("show");
   document.getElementById("cancelPassword").value = "";
   clearSelection();
 }
 
+/* ---------- admin ---------- */
 function openAdmin() {
-  document.getElementById("adminPanel").classList.add("show");
+  adminPanel.classList.add("show");
 }
 
 function closeAdmin() {
-  document.getElementById("adminPanel").classList.remove("show");
+  adminPanel.classList.remove("show");
 }
 
 function adminLogin() {
@@ -110,14 +128,17 @@ function adminLogin() {
 function setBooking(isOpen) {
   if (!adminAuthenticated) return;
 
-  dbRef.collection("settings").doc("booking").set({ open: isOpen }, { merge: true })
-    .then(() => {
-      alert(isOpen ? "예약이 열렸습니다." : "예약이 잠겼습니다.");
-    })
-    .catch((error) => {
-      console.error(error);
-      alert("설정 변경 중 오류가 발생했습니다.");
-    });
+  dbRef.collection("settings").doc("booking").set(
+    { open: isOpen },
+    { merge: true }
+  )
+  .then(() => {
+    alert(isOpen ? "예약이 열렸습니다." : "예약이 잠겼습니다.");
+  })
+  .catch((error) => {
+    console.error(error);
+    alert("설정 변경 중 오류가 발생했습니다.");
+  });
 }
 
 function clearAll() {
@@ -139,6 +160,7 @@ function clearAll() {
     });
 }
 
+/* ---------- counts / ranking ---------- */
 function updateCounts(data) {
   let reserved = 0;
   let available = 0;
@@ -146,8 +168,11 @@ function updateCounts(data) {
   for (let h = 0; h < 24; h++) {
     for (let m = 0; m < 60; m += 30) {
       const id = `${currentBuff}_${padTime(h, m)}`;
-      if (data[id]) reserved++;
-      else available++;
+      if (data[id]) {
+        reserved++;
+      } else {
+        available++;
+      }
     }
   }
 
@@ -157,7 +182,9 @@ function updateCounts(data) {
 
 function updateTopSpeedups(data) {
   const allSlots = Object.values(data)
-    .filter((slot) => slot && slot.daysSaved !== undefined && slot.daysSaved !== null && slot.daysSaved !== "")
+    .filter((slot) => {
+      return slot && slot.daysSaved !== undefined && slot.daysSaved !== null && slot.daysSaved !== "";
+    })
     .sort((a, b) => Number(b.daysSaved) - Number(a.daysSaved))
     .slice(0, 6);
 
@@ -171,9 +198,10 @@ function updateTopSpeedups(data) {
     });
   }
 
-  document.getElementById("rankingBox").innerHTML = html;
+  rankingBox.innerHTML = html;
 }
 
+/* ---------- slots ---------- */
 function generateSlots(data) {
   grid.innerHTML = "";
 
@@ -212,7 +240,7 @@ function generateSlots(data) {
           <div class="timeLocal">${localTime}</div>
           <div class="bookingInfo">&nbsp;</div>
         `;
-        div.onclick = () => {
+        div.onclick = function () {
           highlightSlot(div, true);
           openReserveModal(id);
         };
@@ -226,7 +254,7 @@ function generateSlots(data) {
           <div class="timeLocal">${localTime}</div>
           <div class="bookingInfo">[${slot.alliance}] ${slot.player} (${slot.daysSaved})</div>
         `;
-        div.onclick = () => {
+        div.onclick = function () {
           highlightSlot(div, false);
           openCancelModal(id);
         };
@@ -237,6 +265,7 @@ function generateSlots(data) {
   }
 }
 
+/* ---------- realtime ---------- */
 function attachRealtimeListeners() {
   if (slotsUnsubscribe) {
     slotsUnsubscribe();
@@ -252,7 +281,9 @@ function attachRealtimeListeners() {
     (doc) => {
       bookingOpen = doc.exists ? Boolean(doc.data().open) : false;
 
-      if (slotsUnsubscribe) slotsUnsubscribe();
+      if (slotsUnsubscribe) {
+        slotsUnsubscribe();
+      }
 
       slotsUnsubscribe = dbRef.collection("slots").onSnapshot(
         (snapshot) => {
@@ -280,6 +311,7 @@ function loadSlots() {
   attachRealtimeListeners();
 }
 
+/* ---------- booking ---------- */
 function confirmBooking() {
   if (!selectedSlot) return;
 
@@ -294,18 +326,18 @@ function confirmBooking() {
   }
 
   dbRef.collection("slots").doc(selectedSlot).set({
-    alliance,
-    player,
+    alliance: alliance,
+    player: player,
     daysSaved: Number(daysSaved),
-    password
+    password: password
   })
-    .then(() => {
-      closeModal();
-    })
-    .catch((error) => {
-      console.error(error);
-      alert("예약 중 오류가 발생했습니다.");
-    });
+  .then(() => {
+    closeModal();
+  })
+  .catch((error) => {
+    console.error(error);
+    alert("예약 중 오류가 발생했습니다.");
+  });
 }
 
 function confirmCancel() {
@@ -325,9 +357,10 @@ function confirmCancel() {
         return;
       }
 
-      return dbRef.collection("slots").doc(selectedSlot).delete().then(() => {
-        closeCancelModal();
-      });
+      return dbRef.collection("slots").doc(selectedSlot).delete()
+        .then(() => {
+          closeCancelModal();
+        });
     })
     .catch((error) => {
       console.error(error);
@@ -335,7 +368,7 @@ function confirmCancel() {
     });
 }
 
-/* blue snow */
+/* ---------- blue snow ---------- */
 const canvas = document.getElementById("snow");
 const ctx = canvas.getContext("2d");
 const flakes = [];
@@ -384,12 +417,12 @@ function drawSnow() {
   requestAnimationFrame(drawSnow);
 }
 
+/* ---------- init ---------- */
 window.addEventListener("resize", resizeCanvas);
 setInterval(updateCountdown, 60000);
 
-/* default */
 updateCountdown();
-setActiveTab();
+setActiveTab("monday");
 initSnow();
 drawSnow();
 loadSlots();
