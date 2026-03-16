@@ -19,6 +19,8 @@
 
 <h1>❄ 2737 SVS Booking</h1>
 
+<div id="utcClock"></div>
+
 </header>
 
 <div class="tabs">
@@ -39,7 +41,16 @@
 
 </div>
 
+<div id="rankingBox">
+
+<h3>Top Speed-ups</h3>
+<div id="ranking"></div>
+
+</div>
+
 <div id="slots" class="grid"></div>
+
+<!-- Reserve Modal -->
 
 <div id="modal" class="modal">
 
@@ -54,6 +65,23 @@
 
 <button onclick="confirmBooking()">Reserve</button>
 <button onclick="closeModal()">Cancel</button>
+
+</div>
+
+</div>
+
+<!-- Cancel Modal -->
+
+<div id="cancelModal" class="modal">
+
+<div class="modalBox">
+
+<h3>Cancel Reservation</h3>
+
+<input id="cancelPassword" type="password" placeholder="Enter cancel password">
+
+<button onclick="confirmCancel()">Cancel Reservation</button>
+<button onclick="closeCancelModal()">Close</button>
 
 </div>
 
