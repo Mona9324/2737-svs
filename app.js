@@ -11,12 +11,12 @@ const cancelModal = document.getElementById("cancelModal");
 const adminPanel = document.getElementById("adminPanel");
 const rankingBox = document.getElementById("rankingBox");
 
-const db = firebase.firestore();
+// firebase.js에서 이미 db를 만들었다면 그걸 쓰고, 없으면 여기서 생성
+const dbRef = window.db || firebase.firestore();
 
 let bookingUnsubscribe = null;
 let slotsUnsubscribe = null;
 
-// Countdown
 function updateCountdown() {
   const now = new Date();
   const diff = svsDate - now;
@@ -29,6 +29,7 @@ function updateCountdown() {
   const d = Math.floor(diff / (1000 * 60 * 60 * 24));
   const h = Math.floor((diff / (1000 * 60 * 60)) % 24);
   const m = Math.floor((diff / (1000 * 60)) % 60);
+
   document.getElementById("countdown").innerText = `SVS begins in ${d}d ${h}h ${m}m`;
 }
 setInterval(updateCountdown, 60000);
@@ -44,8 +45,8 @@ function padTime(h, m) {
 }
 
 function clearSelection() {
-  document.querySelectorAll(".slot").forEach((s) => {
-    s.classList.remove("selected", "highlightAvailable", "highlightReserved");
+  document.querySelectorAll(".slot").forEach((slot) => {
+    slot.classList.remove("selected", "highlightAvailable", "highlightReserved");
   });
 }
 
@@ -57,7 +58,7 @@ function highlightSlot(div, isAvailable) {
 
 function switchBuff(buff) {
   currentBuff = buff;
-  document.querySelectorAll(".tabs button").forEach((b) => b.classList.remove("active"));
+  document.querySelectorAll(".tabs button").forEach((btn) => btn.classList.remove("active"));
   const tab = document.getElementById(`tab-${buff}`);
   if (tab) tab.classList.add("active");
   loadSlots();
@@ -100,8 +101,8 @@ function adminLogin() {
   const pw = document.getElementById("adminPass").value;
   if (pw === ADMIN_PASSWORD) {
     adminAuthenticated = true;
-    document.getElementById("adminControls").style.display = "flex";
     document.getElementById("adminLogin").style.display = "none";
+    document.getElementById("adminControls").style.display = "flex";
   } else {
     alert("관리자 비밀번호가 틀렸습니다.");
   }
@@ -109,7 +110,8 @@ function adminLogin() {
 
 function setBooking(isOpen) {
   if (!adminAuthenticated) return;
-  db.collection("settings").doc("booking").set({ open: isOpen }, { merge: true })
+
+  dbRef.collection("settings").doc("booking").set({ open: isOpen }, { merge: true })
     .then(() => {
       alert(isOpen ? "예약이 열렸습니다." : "예약이 잠겼습니다.");
     })
@@ -122,12 +124,11 @@ function setBooking(isOpen) {
 function clearAll() {
   if (!adminAuthenticated) return;
 
-  const ok = confirm("전체 예약을 삭제할까요?");
-  if (!ok) return;
+  if (!confirm("전체 예약을 삭제할까요?")) return;
 
-  db.collection("slots").get()
+  dbRef.collection("slots").get()
     .then((snapshot) => {
-      const batch = db.batch();
+      const batch = dbRef.batch();
       snapshot.forEach((doc) => batch.delete(doc.ref));
       return batch.commit();
     })
@@ -146,13 +147,9 @@ function updateCounts(data) {
 
   for (let h = 0; h < 24; h++) {
     for (let m = 0; m < 60; m += 30) {
-      const utcTime = padTime(h, m);
-      const id = `${currentBuff}_${utcTime}`;
-      if (data[id]) {
-        reserved++;
-      } else {
-        available++;
-      }
+      const id = `${currentBuff}_${padTime(h, m)}`;
+      if (data[id]) reserved++;
+      else available++;
     }
   }
 
@@ -185,6 +182,8 @@ function generateSlots(data) {
   for (let h = 0; h < 24; h++) {
     for (let m = 0; m < 60; m += 30) {
       const utcTime = padTime(h, m);
+      const id = `${currentBuff}_${utcTime}`;
+      const slot = data[id];
 
       const localDate = new Date();
       localDate.setUTCHours(h, m, 0, 0);
@@ -193,10 +192,7 @@ function generateSlots(data) {
         minute: "2-digit"
       });
 
-      const id = `${currentBuff}_${utcTime}`;
-      const slot = data[id];
       const div = document.createElement("div");
-      div.id = id;
       div.className = "slot";
 
       if (!bookingOpen) {
@@ -244,14 +240,22 @@ function generateSlots(data) {
 }
 
 function attachRealtimeListeners() {
-  if (bookingUnsubscribe) bookingUnsubscribe();
-  if (slotsUnsubscribe) slotsUnsubscribe();
+  if (slotsUnsubscribe) {
+    slotsUnsubscribe();
+    slotsUnsubscribe = null;
+  }
+  if (bookingUnsubscribe) {
+    bookingUnsubscribe();
+    bookingUnsubscribe = null;
+  }
 
-  bookingUnsubscribe = db.collection("settings").doc("booking").onSnapshot(
+  bookingUnsubscribe = dbRef.collection("settings").doc("booking").onSnapshot(
     (doc) => {
       bookingOpen = doc.exists ? !!doc.data().open : false;
 
-      slotsUnsubscribe = db.collection("slots").onSnapshot(
+      if (slotsUnsubscribe) slotsUnsubscribe();
+
+      slotsUnsubscribe = dbRef.collection("slots").onSnapshot(
         (snapshot) => {
           const data = {};
           snapshot.forEach((docItem) => {
@@ -277,7 +281,6 @@ function loadSlots() {
   attachRealtimeListeners();
 }
 
-// 예약
 function confirmBooking() {
   if (!selectedSlot) return;
 
@@ -291,28 +294,27 @@ function confirmBooking() {
     return;
   }
 
-  db.collection("slots").doc(selectedSlot).set({
+  dbRef.collection("slots").doc(selectedSlot).set({
     alliance,
     player,
     daysSaved: Number(daysSaved),
     password
   })
-  .then(() => {
-    closeModal();
-  })
-  .catch((error) => {
-    console.error(error);
-    alert("예약 중 오류가 발생했습니다.");
-  });
+    .then(() => {
+      closeModal();
+    })
+    .catch((error) => {
+      console.error(error);
+      alert("예약 중 오류가 발생했습니다.");
+    });
 }
 
-// 취소
 function confirmCancel() {
   if (!selectedSlot) return;
 
   const cancelPassword = document.getElementById("cancelPassword").value;
 
-  db.collection("slots").doc(selectedSlot).get()
+  dbRef.collection("slots").doc(selectedSlot).get()
     .then((doc) => {
       if (!doc.exists) {
         alert("예약 정보를 찾을 수 없습니다.");
@@ -324,7 +326,7 @@ function confirmCancel() {
         return;
       }
 
-      return db.collection("slots").doc(selectedSlot).delete().then(() => {
+      return dbRef.collection("slots").doc(selectedSlot).delete().then(() => {
         closeCancelModal();
       });
     })
@@ -375,7 +377,6 @@ function drawSnow() {
       f.y = -5;
       f.x = Math.random() * canvas.width;
     }
-
     if (f.x < -5) f.x = canvas.width + 5;
     if (f.x > canvas.width + 5) f.x = -5;
   });
@@ -385,14 +386,13 @@ function drawSnow() {
 
 window.addEventListener("resize", resizeCanvas);
 
-// Event bindings
+// 이벤트 연결
 document.getElementById("tab-monday").addEventListener("click", () => switchBuff("monday"));
 document.getElementById("tab-tuesday").addEventListener("click", () => switchBuff("tuesday"));
 document.getElementById("tab-thursday").addEventListener("click", () => switchBuff("thursday"));
 
 document.getElementById("reserveBtn").addEventListener("click", confirmBooking);
 document.getElementById("cancelBtn").addEventListener("click", confirmCancel);
-
 document.getElementById("closeReserveBtn").addEventListener("click", closeModal);
 document.getElementById("closeCancelBtn").addEventListener("click", closeCancelModal);
 
@@ -403,7 +403,7 @@ document.getElementById("openBookingBtn").addEventListener("click", () => setBoo
 document.getElementById("closeBookingBtn").addEventListener("click", () => setBooking(false));
 document.getElementById("clearAllBtn").addEventListener("click", clearAll);
 
-// Start
+// 시작
 initSnow();
 drawSnow();
 loadSlots();
