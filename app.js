@@ -26,14 +26,17 @@ function switchBuff(buff){
     loadSlots();
 }
 
-// Slots
+// Load Slots
 function loadSlots(){
-    db.collection("slots").onSnapshot(snapshot=>{
-        let data={};
-        snapshot.forEach(doc=>{data[doc.id]=doc.data();});
-        generateSlots(data);
-        updateCounts(data);
-        updateTopSpeedups(data);
+    db.collection("settings").doc("booking").onSnapshot(doc=>{
+        bookingOpen = doc.exists ? doc.data().open : false;
+        db.collection("slots").onSnapshot(snapshot=>{
+            let data={};
+            snapshot.forEach(doc=>{data[doc.id]=doc.data();});
+            generateSlots(data);
+            updateCounts(data);
+            updateTopSpeedups(data);
+        });
     });
 }
 
@@ -131,23 +134,22 @@ function updateCounts(data){
     document.getElementById("availableCount").innerText="Available "+(total-reserved);
 }
 
-// Top Speed-ups
+// Top Speed-ups with animation
+let previousTop=[];
 function updateTopSpeedups(data){
     let players=[];
-    for(let key in data){ 
-        let p=data[key]; 
-        players.push({alliance:p.alliance,name:p.player, speed:p.days});
-    }
+    for(let key in data){ let p=data[key]; players.push({alliance:p.alliance,name:p.player,speed:p.days}); }
     players.sort((a,b)=>b.speed-a.speed);
     let top6 = players.slice(0,6);
-    const box=document.getElementById('rankingBox'); 
-    if(!box) return;
-    box.innerHTML='<b>Top Speed-ups</b><div style="display:flex; justify-content:center; gap:40px; margin-top:4px;">'+
+    const box=document.getElementById('rankingBox'); if(!box) return;
+    // Animate change
+    let html='<b>Top Speed-ups</b><div style="display:flex; justify-content:center; gap:40px; margin-top:4px;">'+
         '<div style="display:flex; flex-direction:column; gap:2px;">'+
-            top6.slice(0,3).map((p,i)=>{const trophies=['🥇','🥈','🥉'];return `<div>${trophies[i]} [${p.alliance}] ${p.name} (${p.speed})</div>`;}).join('')+'</div>'+
+        top6.slice(0,3).map((p,i)=>{const trophies=['🥇','🥈','🥉']; return `<div class="rankAnim">${trophies[i]} [${p.alliance}] ${p.name} (${p.speed})</div>`;}).join('')+'</div>'+
         '<div style="display:flex; flex-direction:column; gap:2px;">'+
-            top6.slice(3,6).map((p,i)=>{const colors=['#a0d8f0','#90c8e0','#80b8d0']; return `<div style="display:inline-block;background:${colors[i]};border-radius:50%;width:30px;height:24px;text-align:center;line-height:24px;margin-bottom:2px;">${i+4}</div> [${p.alliance}] ${p.name} (${p.speed})</div>`;}).join('')+'</div>'+
+        top6.slice(3,6).map((p,i)=>{const colors=['#a0d8f0','#90c8e0','#80b8d0']; return `<div class="rankAnim" style="display:inline-block;background:${colors[i]};border-radius:50%;width:24px;height:24px;text-align:center;line-height:24px;">${i+4}</div> [${p.alliance}] ${p.name} (${p.speed})</div>`;}).join('')+'</div>'+
         '</div>';
+    box.innerHTML=html;
 }
 
 // Snow
