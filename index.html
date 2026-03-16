@@ -55,28 +55,7 @@
 
 <!-- 예약 모달 -->
 
-<div id="modal" class="modal">
-
-<div class="modalBox">
-
-<h3>Reserve Slot</h3>
-
-<input id="alliance" type="text" placeholder="Alliance (연맹)">
-
-<input id="player" type="text" placeholder="Player (닉네임)">
-
-<input id="daysSaved" type="number" placeholder="Use Speed-up (사용할 가속)">
-
-<input id="password" type="password" placeholder="Cancel Password (취소용 비밀번호)">
-
-<button onclick="confirmBooking()">Reserve</button>
-
-<button onclick="closeModal()">Cancel</button>
-
-</div>
-
-</div>
-
+https://mona9324.github.io/2737-SvS-booking/
 
 
 <!-- 예약 취소 모달 -->
@@ -121,13 +100,11 @@
 
 
 <div id="adminControls" style="display:none;">
-
-<button onclick="setBooking(true)">예약 열기</button>
-
-<button onclick="setBooking(false)">예약 잠금</button>
-
-<button onclick="clearAll()">전체 예약 삭제</button>
-
+  <button type="button" onclick="setBooking(true)">예약 열기</button>
+  <button type="button" onclick="setBooking(false)">예약 잠금</button>
+  <button type="button" onclick="clearAll()">전체 예약 삭제</button>
+  <button type="button" onclick="exportCurrentBuffCSV()">현재 탭 CSV 내보내기</button>
+  <button type="button" onclick="exportAllCSV()">전체 CSV 내보내기</button>
 </div>
 
 <button onclick="closeAdmin()">닫기</button>
@@ -144,5 +121,7 @@
 
 <script src="app.js"></script>
 
+<div id="toastContainer" class="toastContainer"></div>
+  
 </body>
 </html>
