@@ -5,7 +5,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 
-<title>2737 SVS Booking</title>
+<title>2737 SVS 예약</title>
 
 <link rel="stylesheet" href="style.css">
 
@@ -17,7 +17,7 @@
 
 <header>
 
-<h1>❄ 2737 SVS Booking</h1>
+<h1>❄ 2737 SVS 예약</h1>
 
 <div id="countdown"></div>
 
@@ -35,9 +35,9 @@
 
 <div class="tabs">
 
-<button onclick="switchBuff('monday')">Monday (Construction)</button>
-<button onclick="switchBuff('tuesday')">Tuesday (Research)</button>
-<button onclick="switchBuff('thursday')">Thursday (Training)</button>
+<button onclick="switchBuff('monday')">월요일 (건설)</button>
+<button onclick="switchBuff('tuesday')">화요일 (연구)</button>
+<button onclick="switchBuff('thursday')">목요일 (훈련)</button>
 
 </div>
 
@@ -47,15 +47,15 @@
 
 <div class="modalBox">
 
-<h3>Reserve Slot</h3>
+<h3>예약하기</h3>
 
-<input id="alliance" placeholder="Alliance">
-<input id="player" placeholder="Player">
-<input id="daysSaved" type="number" placeholder="Speed-up Days">
-<input id="password" type="password" placeholder="Cancel Password">
+<input id="alliance" placeholder="연맹명">
+<input id="player" placeholder="플레이어 이름">
+<input id="daysSaved" type="number" placeholder="Speed-up (days)">
+<input id="password" type="password" placeholder="취소 비밀번호">
 
-<button onclick="confirmBooking()">Reserve</button>
-<button onclick="closeModal()">Cancel</button>
+<button onclick="confirmBooking()">예약</button>
+<button onclick="closeModal()">취소</button>
 
 </div>
 
@@ -65,24 +65,24 @@
 
 <div id="adminPanel" class="adminPanel">
 
-<h3>Admin Panel</h3>
+<h3>관리자 패널</h3>
 
 <div id="adminLogin">
 
-<input id="adminPass" type="password" placeholder="Admin Password">
-<button onclick="adminLogin()">Login</button>
+<input id="adminPass" type="password" placeholder="관리자 비밀번호">
+<button onclick="adminLogin()">로그인</button>
 
 </div>
 
 <div id="adminControls">
 
-<button onclick="setBooking(true)">Open Booking</button>
-<button onclick="setBooking(false)">Lock Booking</button>
-<button onclick="clearAll()">Clear All</button>
+<button onclick="setBooking(true)">예약 열기</button>
+<button onclick="setBooking(false)">예약 잠금</button>
+<button onclick="clearAll()">전체 예약 삭제</button>
 
 </div>
 
-<button onclick="closeAdmin()">Close</button>
+<button onclick="closeAdmin()">닫기</button>
 
 </div>
 
