@@ -100,7 +100,12 @@ header{
 .slot.available{border:2px solid #66cc66;}
 .slot.reserved{border:2px solid #e06666; background:#fdecec;}
 .slot.locked{border:2px solid #aaa; background:#eee;}
-.slot.selected{background:#7da7ff; color:white;}
+
+/* 클릭 강조: 너무 쨍하지 않게, 살짝 진한 배경 */
+.slot.selected {
+    background-color: #d6e6ff; /* 원래 배경보다 살짝 진한 하늘색 */
+    border-color: #7da7ff;
+}
 
 .timeRow{
     display:flex;
