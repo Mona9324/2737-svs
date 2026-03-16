@@ -2,7 +2,7 @@ let currentBuff = "monday";
 let selectedSlot = null;
 const ADMIN_PASSWORD = "2737admin";
 let adminAuthenticated = false;
-let bookingOpen = false;
+let bookingOpen = true;
 const svsDate = new Date("2026-03-23T00:00:00Z");
 const grid = document.getElementById("slots");
 
@@ -121,7 +121,9 @@ function setBooking(isOpen) {
 
   dbRef.collection("settings").doc("booking").set({ open: isOpen }, { merge: true })
     .then(() => {
+      bookingOpen = isOpen;
       alert(isOpen ? "예약이 열렸습니다." : "예약이 잠겼습니다.");
+      renderAll(allSlotsData);
     })
     .catch((error) => {
       console.error(error);
@@ -289,46 +291,40 @@ function renderAll(data) {
 }
 
 function attachRealtimeListeners() {
-  if (slotsUnsubscribe) {
-    slotsUnsubscribe();
-    slotsUnsubscribe = null;
-  }
-
   if (bookingUnsubscribe) {
     bookingUnsubscribe();
     bookingUnsubscribe = null;
   }
 
+  if (slotsUnsubscribe) {
+    slotsUnsubscribe();
+    slotsUnsubscribe = null;
+  }
+
   bookingUnsubscribe = dbRef.collection("settings").doc("booking").onSnapshot(
     (doc) => {
-      // booking 문서가 없으면 기본값을 true로 처리
       bookingOpen = doc.exists ? Boolean(doc.data().open) : true;
-
-      if (slotsUnsubscribe) {
-        slotsUnsubscribe();
-        slotsUnsubscribe = null;
-      }
-
-      slotsUnsubscribe = dbRef.collection("slots").onSnapshot(
-        (snapshot) => {
-          const data = {};
-          snapshot.forEach((docItem) => {
-            data[docItem.id] = docItem.data();
-          });
-
-          allSlotsData = data;
-          renderAll(allSlotsData);
-        },
-        (error) => {
-          console.error("slots onSnapshot error:", error);
-        }
-      );
+      renderAll(allSlotsData);
     },
     (error) => {
       console.error("booking onSnapshot error:", error);
-      // settings 읽기 실패 시에도 기본적으로 예약 열림 처리
       bookingOpen = true;
       renderAll(allSlotsData);
+    }
+  );
+
+  slotsUnsubscribe = dbRef.collection("slots").onSnapshot(
+    (snapshot) => {
+      const data = {};
+      snapshot.forEach((docItem) => {
+        data[docItem.id] = docItem.data();
+      });
+
+      allSlotsData = data;
+      renderAll(allSlotsData);
+    },
+    (error) => {
+      console.error("slots onSnapshot error:", error);
     }
   );
 }
@@ -338,7 +334,10 @@ function loadSlots() {
 }
 
 function confirmBooking() {
-  if (!selectedSlot) return;
+  if (!selectedSlot) {
+    alert("예약 슬롯을 먼저 선택해주세요.");
+    return;
+  }
 
   if (!bookingOpen) {
     alert("예약이 닫혀 있습니다.");
@@ -362,39 +361,30 @@ function confirmBooking() {
   }
 
   const slotRef = dbRef.collection("slots").doc(selectedSlot);
-  const bookingRef = dbRef.collection("settings").doc("booking");
 
-  dbRef.runTransaction(async (transaction) => {
-    const bookingDoc = await transaction.get(bookingRef);
-    const slotDoc = await transaction.get(slotRef);
+  dbRef.runTransaction((transaction) => {
+    return transaction.get(slotRef).then((slotDoc) => {
+      if (slotDoc.exists) {
+        throw new Error("ALREADY_RESERVED");
+      }
 
-    const isOpen = bookingDoc.exists ? Boolean(bookingDoc.data().open) : true;
-    if (!isOpen) {
-      throw new Error("BOOKING_CLOSED");
-    }
-
-    if (slotDoc.exists) {
-      throw new Error("ALREADY_RESERVED");
-    }
-
-    transaction.set(slotRef, {
-      alliance,
-      player,
-      daysSaved,
-      password,
-      createdAt: firebase.firestore.FieldValue.serverTimestamp(),
-      buff: currentBuff
+      transaction.set(slotRef, {
+        alliance,
+        player,
+        daysSaved,
+        password,
+        createdAt: firebase.firestore.FieldValue.serverTimestamp(),
+        buff: currentBuff
+      });
     });
   })
     .then(() => {
       closeModal();
     })
     .catch((error) => {
-      console.error(error);
+      console.error("confirmBooking error:", error);
 
-      if (error.message === "BOOKING_CLOSED") {
-        alert("예약이 닫혀 있습니다.");
-      } else if (error.message === "ALREADY_RESERVED") {
+      if (error.message === "ALREADY_RESERVED") {
         alert("이미 예약된 슬롯입니다.");
       } else {
         alert("예약 중 오류가 발생했습니다.");
@@ -403,30 +393,33 @@ function confirmBooking() {
 }
 
 function confirmCancel() {
-  if (!selectedSlot) return;
+  if (!selectedSlot) {
+    alert("취소할 슬롯을 먼저 선택해주세요.");
+    return;
+  }
 
   const cancelPassword = document.getElementById("cancelPassword").value;
   const slotRef = dbRef.collection("slots").doc(selectedSlot);
 
-  dbRef.runTransaction(async (transaction) => {
-    const doc = await transaction.get(slotRef);
+  dbRef.runTransaction((transaction) => {
+    return transaction.get(slotRef).then((doc) => {
+      if (!doc.exists) {
+        throw new Error("NOT_FOUND");
+      }
 
-    if (!doc.exists) {
-      throw new Error("NOT_FOUND");
-    }
+      const data = doc.data();
+      if (data.password !== cancelPassword) {
+        throw new Error("WRONG_PASSWORD");
+      }
 
-    const data = doc.data();
-    if (data.password !== cancelPassword) {
-      throw new Error("WRONG_PASSWORD");
-    }
-
-    transaction.delete(slotRef);
+      transaction.delete(slotRef);
+    });
   })
     .then(() => {
       closeCancelModal();
     })
     .catch((error) => {
-      console.error(error);
+      console.error("confirmCancel error:", error);
 
       if (error.message === "NOT_FOUND") {
         alert("예약 정보를 찾을 수 없습니다.");
