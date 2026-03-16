@@ -35,6 +35,9 @@ header {
     display: flex;
     justify-content: center;
     margin: 20px 0;
+    max-width: 620px; /* 슬롯 4개 너비에 맞춤 */
+    margin-left: auto;
+    margin-right: auto;
 }
 .tabs button {
     flex: 1;
@@ -42,13 +45,15 @@ header {
     margin: 0 5px;
     border: none;
     border-radius: 12px;
-    background: #7da7ff;
-    color: white;
+    background: #a2cfff; /* 연한 하늘색 */
+    color: #000;
     font-weight: bold;
     cursor: pointer;
+    transition: 0.2s;
 }
 .tabs button.active {
-    background: #5f85d6;
+    background: #7da7ff; /* 클릭 시 색 변환 */
+    color: white;
 }
 
 /* 슬롯 그리드 */
@@ -57,7 +62,7 @@ header {
     grid-template-columns: repeat(4, 1fr);
     gap: 14px;
     padding: 20px;
-    max-width: 900px;
+    max-width: 620px; /* 4개 슬롯에 맞춘 최대 너비 */
     margin: auto;
 }
 .slot {
@@ -65,7 +70,7 @@ header {
     border-radius: 12px;
     text-align: left;
     transition: 0.3s;
-    min-height: 120px; /* 예약 전/후 동일 높이 */
+    min-height: 120px; /* 높이 동일 */
     display: flex;
     flex-direction: column;
     justify-content: center;
@@ -92,13 +97,16 @@ header {
     background-color: #f8e0e0; /* 연한 붉은색 */
 }
 
+/* 모달 중앙 배치 */
 .modal {
     display: none;
     position: fixed;
     top: 0; left: 0;
     width: 100%; height: 100%;
     background: rgba(0,0,0,0.4);
-    align-items: center; justify-content: center;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 .modalBox {
     background: white;
@@ -107,11 +115,7 @@ header {
     display: flex;
     flex-direction: column;
     gap: 10px;
-    width: 280px;
-    margin: auto;
-    position: relative;
-    top: 50%;
-    transform: translateY(-50%);
+    width: 300px;
 }
 .modalBox input {
     padding: 10px;
@@ -125,6 +129,10 @@ header {
     background: #7da7ff;
     color: white;
     cursor: pointer;
+    transition: 0.2s;
+}
+.modalBox button:hover {
+    background: #5f85d6;
 }
 
 .adminFloating {
