@@ -4,16 +4,9 @@ let selectedSlot=null
 const ADMIN_PASSWORD="2737admin"
 
 let adminAuthenticated=false
-let bookingOpen=false
+let bookingOpen=true
 
 const grid=document.getElementById("slots")
-
-db.collection("settings").doc("booking").onSnapshot(doc=>{
-if(doc.exists){
-bookingOpen=doc.data().open
-}
-loadSlots()
-})
 
 function loadSlots(){
 
@@ -31,6 +24,8 @@ updateCounts(data)
 
 }
 
+loadSlots()
+
 function switchBuff(buff){
 currentBuff=buff
 loadSlots()
@@ -47,7 +42,6 @@ let startUTC=String(h).padStart(2,"0")+":"+String(m).padStart(2,"0")
 
 let endM=m+30
 let endH=h
-
 if(endM==60){endM=0;endH++}
 
 let endUTC=String(endH).padStart(2,"0")+":"+String(endM).padStart(2,"0")
@@ -62,26 +56,20 @@ let localStartStr=localStart.toLocaleTimeString([], {hour:'2-digit',minute:'2-di
 let localEndStr=localEnd.toLocaleTimeString([], {hour:'2-digit',minute:'2-digit'})
 
 let id=currentBuff+"_"+startUTC
-
 let div=document.createElement("div")
 
 let slot=data[id]
 
-if(!bookingOpen){
-
-div.className="slot locked"
-
-div.innerHTML=
-"<div class='timeUTC'>"+startUTC+" - "+endUTC+" UTC</div>"+
-"<div class='timeLocal'>"+localStartStr+" - "+localEndStr+"</div><br>🔒"
-
-}else if(!slot){
+if(!slot){
 
 div.className="slot available"
 
 div.innerHTML=
+"<div class='timeRow'>"+
 "<div class='timeUTC'>"+startUTC+" - "+endUTC+" UTC</div>"+
-"<div class='timeLocal'>"+localStartStr+" - "+localEndStr+"</div><br>Available"
+"<div class='statusAvailable'>Available</div>"+
+"</div>"+
+"<div class='timeLocal'>"+localStartStr+" - "+localEndStr+"</div>"
 
 div.onclick=()=>openModal(id)
 
@@ -90,7 +78,10 @@ div.onclick=()=>openModal(id)
 div.className="slot reserved"
 
 div.innerHTML=
+"<div class='timeRow'>"+
 "<div class='timeUTC'>"+startUTC+" - "+endUTC+" UTC</div>"+
+"<div class='statusReserved'>Reserved</div>"+
+"</div>"+
 "<div class='timeLocal'>"+localStartStr+" - "+localEndStr+"</div>"+
 "<div class='bookingInfo'>["+slot.alliance+"] "+slot.player+" ("+slot.days+")</div>"
 
@@ -139,13 +130,6 @@ alert("Please fill all fields")
 return
 }
 
-db.collection("slots").doc(selectedSlot).get().then(doc=>{
-
-if(doc.exists){
-alert("This slot is already reserved")
-return
-}
-
 db.collection("slots").doc(selectedSlot).set({
 alliance,
 player,
@@ -155,11 +139,9 @@ days
 
 closeModal()
 
-})
-
 }
 
-/* BLUE SNOW */
+/* SNOW */
 
 const canvas=document.getElementById("snow")
 const ctx=canvas.getContext("2d")
