@@ -1,396 +1,437 @@
-body {
-  font-family: Arial, sans-serif;
-  background: #eef5fb;
-  margin: 0;
-  text-align: center;
-  color: #1f2937;
+* {
+  box-sizing: border-box;
 }
 
-/* Snow canvas */
+html,
+body {
+  margin: 0;
+  padding: 0;
+  font-family: Arial, Helvetica, sans-serif;
+  background:
+    radial-gradient(circle at top, rgba(30, 70, 120, 0.35), transparent 45%),
+    linear-gradient(180deg, #08111f 0%, #0c1830 45%, #122447 100%);
+  color: #f4f8ff;
+  min-height: 100%;
+}
+
+/* ---------- snow canvas ---------- */
 #snow {
   position: fixed;
-  top: 0;
-  left: 0;
+  inset: 0;
   width: 100%;
   height: 100%;
   pointer-events: none;
   z-index: 0;
 }
 
-/* Keep UI above snow */
+/* ---------- main layers ---------- */
 header,
 .tabs,
 .grid,
-.adminFloating,
-.adminPanel,
 .modal {
   position: relative;
   z-index: 1;
 }
 
+/* ---------- header ---------- */
 header {
-  padding: 20px 16px 10px;
-  position: relative;
+  text-align: center;
+  padding: 30px 16px 18px;
 }
 
-h1 {
-  margin: 0 0 10px;
+header h1 {
+  margin: 0 0 12px;
+  font-size: 2rem;
+  font-weight: 800;
+  letter-spacing: 0.4px;
+  text-shadow: 0 2px 14px rgba(120, 190, 255, 0.25);
 }
 
 #countdown {
-  font-size: 18px;
-  font-weight: bold;
-  margin-bottom: 10px;
+  display: inline-block;
+  margin-bottom: 14px;
+  padding: 10px 16px;
+  border: 1px solid rgba(152, 207, 255, 0.22);
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.06);
+  color: #dceeff;
+  font-size: 0.96rem;
+  font-weight: 700;
+  backdrop-filter: blur(8px);
 }
 
 .slotStats {
-  margin-top: 10px;
-  font-size: 18px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 18px;
+  flex-wrap: wrap;
+  margin-bottom: 18px;
+  font-size: 0.95rem;
 }
 
 .availableDot,
 .reservedDot {
   display: inline-block;
-  width: 10px;
-  height: 10px;
+  width: 11px;
+  height: 11px;
   border-radius: 50%;
-  vertical-align: middle;
   margin-right: 6px;
+  vertical-align: middle;
 }
 
 .availableDot {
-  background: #8bd18b;
+  background: #56d589;
+  box-shadow: 0 0 10px rgba(86, 213, 137, 0.45);
 }
 
 .reservedDot {
-  background: #d98c8c;
-  margin-left: 20px;
+  background: #ff7b7b;
+  box-shadow: 0 0 10px rgba(255, 123, 123, 0.4);
 }
 
-/* Ranking */
+/* ---------- ranking ---------- */
 #rankingBox {
-  position: absolute;
-  top: 10px;
-  right: 16px;
-  width: 220px;
-  background: rgba(255, 255, 255, 0.96);
-  padding: 10px 12px;
-  border-radius: 10px;
-  box-shadow: 0 0 10px rgba(0, 0, 0, 0.12);
-  text-align: left;
-  box-sizing: border-box;
+  width: min(760px, calc(100% - 24px));
+  margin: 0 auto;
+  padding: 14px 16px;
+  border-radius: 18px;
+  background: rgba(255, 255, 255, 0.07);
+  border: 1px solid rgba(173, 214, 255, 0.18);
+  box-shadow: 0 12px 28px rgba(0, 0, 0, 0.18);
+  backdrop-filter: blur(10px);
 }
 
 .rankingTitle {
-  font-weight: bold;
-  margin-bottom: 8px;
+  font-size: 1rem;
+  font-weight: 800;
+  margin-bottom: 10px;
+  color: #eef7ff;
 }
 
 .rankingItem {
   display: flex;
   align-items: center;
-  gap: 8px;
-  padding: 2px 0;
-  font-size: 14px;
+  gap: 10px;
+  padding: 7px 0;
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+  font-size: 0.95rem;
+  color: #dfeeff;
+}
+
+.rankingItem:first-of-type {
+  border-top: none;
 }
 
 .rankingItem span {
-  min-width: 18px;
-  font-weight: bold;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 24px;
+  height: 24px;
+  border-radius: 999px;
+  background: rgba(123, 189, 255, 0.18);
+  color: #9fd4ff;
+  font-size: 0.82rem;
+  font-weight: 800;
 }
 
-/* Tabs */
+/* ---------- tabs ---------- */
 .tabs {
   display: flex;
   justify-content: center;
   gap: 10px;
-  max-width: 920px;
-  margin: 18px auto 12px;
-  padding: 0 20px;
-  box-sizing: border-box;
+  flex-wrap: wrap;
+  padding: 8px 14px 18px;
 }
 
 .tabs button {
-  flex: 1;
-  padding: 14px 10px;
-  border: none;
-  border-radius: 12px;
-  background: #d8f2ff;
-  color: #2d5468;
-  font-weight: bold;
+  border: 1px solid rgba(155, 210, 255, 0.22);
+  background: rgba(255, 255, 255, 0.06);
+  color: #eaf5ff;
+  padding: 11px 16px;
+  border-radius: 999px;
   cursor: pointer;
-  transition: background-color 0.2s ease, transform 0.15s ease;
+  font-size: 0.95rem;
+  font-weight: 700;
+  transition:
+    transform 0.18s ease,
+    background 0.18s ease,
+    border-color 0.18s ease,
+    box-shadow 0.18s ease;
+  backdrop-filter: blur(8px);
 }
 
 .tabs button:hover {
-  background: #ccecff;
+  transform: translateY(-1px);
+  background: rgba(255, 255, 255, 0.1);
+  border-color: rgba(155, 210, 255, 0.38);
 }
 
 .tabs button.active {
-  background: #bfe7fb;
-  color: #1c4a61;
+  background: linear-gradient(180deg, rgba(100, 180, 255, 0.35), rgba(70, 130, 230, 0.22));
+  border-color: rgba(144, 211, 255, 0.7);
+  box-shadow: 0 8px 18px rgba(74, 136, 229, 0.24);
+  color: #ffffff;
 }
 
-/* Slots grid */
+/* ---------- grid ---------- */
 .grid {
+  width: min(1300px, calc(100% - 24px));
+  margin: 0 auto 34px;
   display: grid;
-  grid-template-columns: repeat(4, minmax(0, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(235px, 1fr));
   gap: 14px;
-  max-width: 920px;
-  margin: 0 auto 30px;
-  padding: 20px;
-  box-sizing: border-box;
 }
 
+/* ---------- slot ---------- */
 .slot {
-  background: #fffaf2;
-  border-radius: 12px;
-  text-align: left;
-  min-height: 128px;
-  padding: 12px;
-  box-sizing: border-box;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  transition: background-color 0.2s ease, border-color 0.2s ease, transform 0.15s ease;
+  min-height: 116px;
+  padding: 14px;
+  border-radius: 18px;
+  border: 1px solid rgba(173, 214, 255, 0.14);
+  background: rgba(255, 255, 255, 0.07);
+  box-shadow: 0 10px 24px rgba(0, 0, 0, 0.18);
+  backdrop-filter: blur(8px);
+  transition:
+    transform 0.18s ease,
+    border-color 0.18s ease,
+    box-shadow 0.18s ease,
+    background 0.18s ease;
+}
+
+.slot:hover {
+  transform: translateY(-2px);
 }
 
 .slot.available {
-  border: 2px solid #8bd18b;
   cursor: pointer;
+}
+
+.slot.available:hover {
+  border-color: rgba(96, 233, 154, 0.55);
+  box-shadow: 0 12px 28px rgba(56, 173, 110, 0.18);
 }
 
 .slot.reserved {
-  border: 2px solid #d98c8c;
-  background: #f7eaea;
   cursor: pointer;
+  border-color: rgba(255, 138, 138, 0.18);
+}
+
+.slot.reserved:hover {
+  border-color: rgba(255, 138, 138, 0.48);
+  box-shadow: 0 12px 28px rgba(190, 75, 75, 0.16);
 }
 
 .slot.locked {
-  border: 2px solid #bababa;
-  background: #ececec;
+  opacity: 0.8;
+  border-color: rgba(196, 208, 224, 0.14);
+  background: rgba(255, 255, 255, 0.045);
+  cursor: not-allowed;
 }
 
-.slot.available:hover,
-.slot.reserved:hover {
-  transform: translateY(-1px);
+.slot.selected {
+  outline: 2px solid rgba(170, 219, 255, 0.9);
+  outline-offset: 0;
 }
 
-/* Click highlight */
-.selected.highlightAvailable {
-  background-color: #e9f8e9;
+.slot.highlightAvailable {
+  border-color: rgba(86, 213, 137, 0.85);
+  box-shadow: 0 0 0 1px rgba(86, 213, 137, 0.18), 0 12px 28px rgba(56, 173, 110, 0.2);
 }
 
-.selected.highlightReserved {
-  background-color: #f4dfdf;
+.slot.highlightReserved {
+  border-color: rgba(255, 123, 123, 0.85);
+  box-shadow: 0 0 0 1px rgba(255, 123, 123, 0.14), 0 12px 28px rgba(190, 75, 75, 0.18);
 }
 
-/* Slot text */
 .timeRow {
   display: flex;
   justify-content: space-between;
-  align-items: center;
+  align-items: flex-start;
   gap: 8px;
+  margin-bottom: 10px;
 }
 
 .timeUTC {
-  font-size: 15px;
-  font-weight: bold;
+  font-size: 0.94rem;
+  font-weight: 800;
+  color: #eef7ff;
+  line-height: 1.35;
 }
 
 .timeLocal {
-  margin-top: 6px;
-  font-size: 13px;
-  color: #5b6470;
+  font-size: 0.88rem;
+  color: #b9d5ef;
+  margin-bottom: 12px;
+}
+
+.statusAvailable,
+.statusReserved {
+  flex-shrink: 0;
+  padding: 4px 9px;
+  border-radius: 999px;
+  font-size: 0.78rem;
+  font-weight: 800;
+  white-space: nowrap;
 }
 
 .statusAvailable {
-  font-size: 13px;
-  font-weight: bold;
-  color: #3f9b3f;
-  white-space: nowrap;
+  background: rgba(86, 213, 137, 0.16);
+  color: #87efaf;
+  border: 1px solid rgba(86, 213, 137, 0.3);
 }
 
 .statusReserved {
-  font-size: 13px;
-  font-weight: bold;
-  color: #c95555;
-  white-space: nowrap;
+  background: rgba(255, 123, 123, 0.14);
+  color: #ffb1b1;
+  border: 1px solid rgba(255, 123, 123, 0.28);
 }
 
 .bookingInfo {
-  margin-top: 10px;
-  font-size: 14px;
+  min-height: 22px;
+  font-size: 0.92rem;
+  color: #edf5ff;
   line-height: 1.35;
   word-break: break-word;
 }
 
-/* Modals - hidden by default */
+/* ---------- modal ---------- */
 .modal {
-  display: none;
   position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background: rgba(0, 0, 0, 0.35);
-  z-index: 1000;
+  inset: 0;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  background: rgba(3, 8, 18, 0.68);
+  backdrop-filter: blur(6px);
+  z-index: 10;
 }
 
 .modal.show {
   display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: 16px;
-  box-sizing: border-box;
 }
 
 .modalBox {
-  background: #ffffff;
   width: 100%;
-  max-width: 320px;
-  padding: 24px;
-  border-radius: 14px;
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-  box-sizing: border-box;
-  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.18);
+  max-width: 420px;
+  padding: 22px;
+  border-radius: 22px;
+  background: linear-gradient(180deg, rgba(20, 35, 62, 0.96), rgba(12, 24, 46, 0.98));
+  border: 1px solid rgba(162, 213, 255, 0.2);
+  box-shadow: 0 18px 50px rgba(0, 0, 0, 0.36);
 }
 
 .modalBox h3 {
-  margin: 0 0 4px;
+  margin: 0 0 16px;
+  font-size: 1.22rem;
+  color: #f3f9ff;
 }
 
 .modalBox input {
-  padding: 10px 12px;
-  border: 1px solid #cfd8e3;
-  border-radius: 8px;
-  font-size: 14px;
-  box-sizing: border-box;
+  width: 100%;
+  margin-bottom: 11px;
+  padding: 12px 13px;
+  border-radius: 12px;
+  border: 1px solid rgba(158, 211, 255, 0.18);
+  background: rgba(255, 255, 255, 0.08);
+  color: #f5f9ff;
+  font-size: 0.96rem;
+  outline: none;
+}
+
+.modalBox input::placeholder {
+  color: #b7c9dc;
+}
+
+.modalBox input:focus {
+  border-color: rgba(149, 214, 255, 0.68);
+  box-shadow: 0 0 0 3px rgba(117, 182, 255, 0.12);
 }
 
 .modalBox button {
-  padding: 10px 12px;
+  width: 100%;
+  padding: 12px 14px;
+  margin-top: 6px;
   border: none;
-  border-radius: 8px;
-  background: #7da7ff;
-  color: #ffffff;
-  font-weight: bold;
+  border-radius: 12px;
   cursor: pointer;
+  font-size: 0.97rem;
+  font-weight: 800;
+  transition:
+    transform 0.15s ease,
+    opacity 0.15s ease;
 }
 
 .modalBox button:hover {
-  background: #6a96f4;
+  transform: translateY(-1px);
 }
 
-/* Admin */
-.adminFloating {
-  position: fixed;
-  right: 20px;
-  bottom: 20px;
-  z-index: 900;
-  padding: 10px 12px;
-  border: none;
-  border-radius: 8px;
-  background: #7da7ff;
+.modalBox button:first-of-type {
+  background: linear-gradient(180deg, #66b8ff 0%, #4d8eff 100%);
   color: white;
-  font-weight: bold;
-  cursor: pointer;
+  box-shadow: 0 10px 24px rgba(77, 142, 255, 0.28);
 }
 
-.adminFloating:hover {
-  background: #6a96f4;
+.modalBox button:last-of-type {
+  background: rgba(255, 255, 255, 0.1);
+  color: #eef7ff;
 }
 
-.adminPanel {
-  display: none;
-  position: fixed;
-  top: 50%;
-  left: 50%;
-  width: calc(100% - 32px);
-  max-width: 340px;
-  padding: 22px;
-  box-sizing: border-box;
-  background: #ffffff;
-  border-radius: 14px;
-  box-shadow: 0 0 20px rgba(0, 0, 0, 0.22);
-  transform: translate(-50%, -50%);
-  z-index: 1001;
-}
-
-.adminPanel.show {
-  display: block;
-}
-
-.adminPanel h3 {
-  margin-top: 0;
-}
-
-#adminLogin,
-#adminControls {
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-}
-
-#adminLogin input {
-  padding: 10px 12px;
-  border: 1px solid #cfd8e3;
-  border-radius: 8px;
-  font-size: 14px;
-  box-sizing: border-box;
-}
-
-#adminLogin button,
-#adminControls button,
-.adminPanel > button {
-  padding: 10px 12px;
-  border: none;
-  border-radius: 8px;
-  background: #7da7ff;
-  color: #ffffff;
-  font-weight: bold;
-  cursor: pointer;
-}
-
-#adminLogin button:hover,
-#adminControls button:hover,
-.adminPanel > button:hover {
-  background: #6a96f4;
-}
-
-#adminControls {
-  display: none;
-  margin-bottom: 12px;
-}
-
-/* Responsive */
-@media (max-width: 980px) {
-  #rankingBox {
-    position: static;
-    width: auto;
-    max-width: 320px;
-    margin: 12px auto 0;
-  }
-}
-
-@media (max-width: 820px) {
+/* ---------- responsive ---------- */
+@media (max-width: 900px) {
   .grid {
-    grid-template-columns: repeat(3, minmax(0, 1fr));
+    grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
   }
 }
 
-@media (max-width: 620px) {
+@media (max-width: 640px) {
+  header {
+    padding-top: 24px;
+  }
+
+  header h1 {
+    font-size: 1.6rem;
+  }
+
+  #countdown {
+    font-size: 0.9rem;
+    padding: 9px 13px;
+  }
+
   .tabs {
-    flex-direction: column;
+    gap: 8px;
+    padding: 8px 12px 16px;
+  }
+
+  .tabs button {
+    width: 100%;
+    max-width: 360px;
   }
 
   .grid {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
+    width: calc(100% - 16px);
+    grid-template-columns: 1fr;
+    gap: 12px;
   }
 
-  .slotStats {
-    line-height: 1.8;
+  .slot {
+    min-height: 104px;
+    padding: 13px;
+  }
+
+  .timeRow {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .modal {
+    padding: 14px;
+  }
+
+  .modalBox {
+    padding: 18px;
+    border-radius: 18px;
   }
 }
