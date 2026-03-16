@@ -301,7 +301,8 @@ function attachRealtimeListeners() {
 
   bookingUnsubscribe = dbRef.collection("settings").doc("booking").onSnapshot(
     (doc) => {
-      bookingOpen = doc.exists ? Boolean(doc.data().open) : false;
+      // booking 문서가 없으면 기본값을 true로 처리
+      bookingOpen = doc.exists ? Boolean(doc.data().open) : true;
 
       if (slotsUnsubscribe) {
         slotsUnsubscribe();
@@ -325,6 +326,9 @@ function attachRealtimeListeners() {
     },
     (error) => {
       console.error("booking onSnapshot error:", error);
+      // settings 읽기 실패 시에도 기본적으로 예약 열림 처리
+      bookingOpen = true;
+      renderAll(allSlotsData);
     }
   );
 }
