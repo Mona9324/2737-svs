@@ -1,79 +1,77 @@
 <!DOCTYPE html>
-<html lang="ko">
+<html>
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>2737 SVS Booking</title>
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
   <canvas id="snow"></canvas>
 
-  <header class="page-header">
+  <header>
     <h1>❄ 2737 SVS Booking</h1>
     <div id="countdown"></div>
+
+    <div class="slotStats">
+      <span class="availableDot"></span>
+      <span id="availableCount">Available 0</span>
+      <span class="reservedDot"></span>
+      <span id="reservedCount">Reserved 0</span>
+    </div>
+
     <div id="rankingBox"></div>
   </header>
 
-  <section class="top-wrap">
-    <div class="tabs" role="tablist" aria-label="Buff day tabs">
-      <button id="tab-monday" class="tab-button active" type="button">Monday (Construction)</button>
-      <button id="tab-tuesday" class="tab-button" type="button">Tuesday (Research)</button>
-      <button id="tab-thursday" class="tab-button" type="button">Thursday (Troop Training)</button>
-    </div>
+  <div class="tabs">
+    <button onclick="switchBuff('monday')">Monday (Construction)</button>
+    <button onclick="switchBuff('tuesday')">Tuesday (Research)</button>
+    <button onclick="switchBuff('thursday')">Thursday (Troop Training)</button>
+  </div>
 
-    <div class="slot-stats">
-      <span class="available-dot"></span><span id="availableCount">Available 0</span>
-      <span class="reserved-dot"></span><span id="reservedCount">Reserved 0</span>
-    </div>
-  </section>
+  <div id="slots" class="grid"></div>
 
-  <main>
-    <div id="slots" class="grid"></div>
-  </main>
-
-  <div id="modal" class="modal" aria-hidden="true">
-    <div class="modal-box">
+  <!-- 예약 모달 -->
+  <div id="modal" class="modal">
+    <div class="modalBox">
       <h3>Reserve Slot</h3>
-      <input id="alliance" type="text" placeholder="Alliance">
-      <input id="player" type="text" placeholder="Player">
-      <input id="daysSaved" type="number" placeholder="Speed-up Days">
+      <input id="alliance" placeholder="Alliance">
+      <input id="player" placeholder="Player">
+      <input id="daysSaved" type="number" placeholder="Days Saved">
       <input id="password" type="password" placeholder="Cancel Password">
-      <div class="modal-buttons">
-        <button id="reserveBtn" type="button">Reserve</button>
-        <button id="closeReserveBtn" type="button">Cancel</button>
-      </div>
+      <button onclick="confirmBooking()">Reserve</button>
+      <button onclick="closeModal()">Cancel</button>
     </div>
   </div>
 
-  <div id="cancelModal" class="modal" aria-hidden="true">
-    <div class="modal-box">
+  <!-- 예약 취소 모달 -->
+  <div id="cancelModal" class="modal">
+    <div class="modalBox">
       <h3>Cancel Reservation</h3>
       <input id="cancelPassword" type="password" placeholder="Password">
-      <div class="modal-buttons">
-        <button id="cancelBtn" type="button">Cancel Reservation</button>
-        <button id="closeCancelBtn" type="button">Close</button>
-      </div>
+      <button onclick="confirmCancel()">Cancel Reservation</button>
+      <button onclick="closeCancelModal()">Close</button>
     </div>
   </div>
 
-  <button id="adminOpenBtn" class="admin-floating" type="button">⚙ Admin</button>
+  <!-- Admin -->
+  <button class="adminFloating" onclick="openAdmin()">⚙ Admin</button>
 
-  <div id="adminPanel" class="admin-panel" aria-hidden="true">
+  <div id="adminPanel" class="adminPanel">
     <h3>관리자 패널</h3>
 
-    <div id="adminLogin" class="admin-login">
+    <div id="adminLogin">
       <input id="adminPass" type="password" placeholder="관리자 비밀번호">
-      <button id="adminLoginBtn" type="button">로그인</button>
+      <button onclick="adminLogin()">로그인</button>
     </div>
 
-    <div id="adminControls" class="admin-controls">
-      <button id="openBookingBtn" type="button">예약 열기</button>
-      <button id="closeBookingBtn" type="button">예약 잠금</button>
-      <button id="clearAllBtn" type="button">전체 예약 삭제</button>
+    <div id="adminControls">
+      <button onclick="setBooking(true)">예약 열기</button>
+      <button onclick="setBooking(false)">예약 잠금</button>
+      <button onclick="clearAll()">전체 예약 삭제</button>
     </div>
 
-    <button id="adminCloseBtn" type="button">닫기</button>
+    <button onclick="closeAdmin()">닫기</button>
   </div>
 
   <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app-compat.js"></script>
