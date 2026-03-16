@@ -1,437 +1,151 @@
-* {
-  box-sizing: border-box;
+body{
+margin:0;
+font-family:Arial;
+background:#0a1324;
+color:white;
 }
 
-html,
-body {
-  margin: 0;
-  padding: 0;
-  font-family: Arial, Helvetica, sans-serif;
-  background:
-    radial-gradient(circle at top, rgba(30, 70, 120, 0.35), transparent 45%),
-    linear-gradient(180deg, #08111f 0%, #0c1830 45%, #122447 100%);
-  color: #f4f8ff;
-  min-height: 100%;
+header{
+text-align:center;
+padding:20px;
 }
 
-/* ---------- snow canvas ---------- */
-#snow {
-  position: fixed;
-  inset: 0;
-  width: 100%;
-  height: 100%;
-  pointer-events: none;
-  z-index: 0;
+.tabs{
+text-align:center;
+margin-bottom:10px;
 }
 
-/* ---------- main layers ---------- */
-header,
-.tabs,
-.grid,
-.modal {
-  position: relative;
-  z-index: 1;
+.tabs button{
+margin:5px;
+padding:10px 15px;
+border:none;
+background:#1f3b73;
+color:white;
+cursor:pointer;
+border-radius:6px;
 }
 
-/* ---------- header ---------- */
-header {
-  text-align: center;
-  padding: 30px 16px 18px;
+.slotStats{
+text-align:center;
+margin-bottom:10px;
+font-weight:bold;
 }
 
-header h1 {
-  margin: 0 0 12px;
-  font-size: 2rem;
-  font-weight: 800;
-  letter-spacing: 0.4px;
-  text-shadow: 0 2px 14px rgba(120, 190, 255, 0.25);
+.availableDot{
+width:10px;
+height:10px;
+background:#00ff9d;
+display:inline-block;
+border-radius:50%;
+margin-right:4px;
 }
 
-#countdown {
-  display: inline-block;
-  margin-bottom: 14px;
-  padding: 10px 16px;
-  border: 1px solid rgba(152, 207, 255, 0.22);
-  border-radius: 999px;
-  background: rgba(255, 255, 255, 0.06);
-  color: #dceeff;
-  font-size: 0.96rem;
-  font-weight: 700;
-  backdrop-filter: blur(8px);
+.reservedDot{
+width:10px;
+height:10px;
+background:#ff5b5b;
+display:inline-block;
+border-radius:50%;
+margin-left:15px;
+margin-right:4px;
 }
 
-.slotStats {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  gap: 18px;
-  flex-wrap: wrap;
-  margin-bottom: 18px;
-  font-size: 0.95rem;
+.grid{
+max-width:1400px;
+margin:auto;
+display:grid;
+grid-template-columns:repeat(auto-fill,minmax(280px,1fr));
+gap:12px;
+padding:20px;
 }
 
-.availableDot,
-.reservedDot {
-  display: inline-block;
-  width: 11px;
-  height: 11px;
-  border-radius: 50%;
-  margin-right: 6px;
-  vertical-align: middle;
+.slot{
+background:#13213f;
+padding:15px;
+border-radius:10px;
+cursor:pointer;
 }
 
-.availableDot {
-  background: #56d589;
-  box-shadow: 0 0 10px rgba(86, 213, 137, 0.45);
+.slot.available{
+border:2px solid #00ff9d;
 }
 
-.reservedDot {
-  background: #ff7b7b;
-  box-shadow: 0 0 10px rgba(255, 123, 123, 0.4);
+.slot.reserved{
+border:2px solid #ff5b5b;
 }
 
-/* ---------- ranking ---------- */
-#rankingBox {
-  width: min(760px, calc(100% - 24px));
-  margin: 0 auto;
-  padding: 14px 16px;
-  border-radius: 18px;
-  background: rgba(255, 255, 255, 0.07);
-  border: 1px solid rgba(173, 214, 255, 0.18);
-  box-shadow: 0 12px 28px rgba(0, 0, 0, 0.18);
-  backdrop-filter: blur(10px);
+.slot.locked{
+opacity:0.5;
+cursor:not-allowed;
 }
 
-.rankingTitle {
-  font-size: 1rem;
-  font-weight: 800;
-  margin-bottom: 10px;
-  color: #eef7ff;
+.timeRow{
+font-weight:bold;
+margin-bottom:5px;
 }
 
-.rankingItem {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  padding: 7px 0;
-  border-top: 1px solid rgba(255, 255, 255, 0.08);
-  font-size: 0.95rem;
-  color: #dfeeff;
+.timeLocal{
+font-size:13px;
+opacity:0.7;
 }
 
-.rankingItem:first-of-type {
-  border-top: none;
+.bookingInfo{
+margin-top:5px;
+font-size:14px;
 }
 
-.rankingItem span {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  min-width: 24px;
-  height: 24px;
-  border-radius: 999px;
-  background: rgba(123, 189, 255, 0.18);
-  color: #9fd4ff;
-  font-size: 0.82rem;
-  font-weight: 800;
+.modal{
+position:fixed;
+top:0;
+left:0;
+width:100%;
+height:100%;
+background:rgba(0,0,0,0.6);
+display:none;
+justify-content:center;
+align-items:center;
 }
 
-/* ---------- tabs ---------- */
-.tabs {
-  display: flex;
-  justify-content: center;
-  gap: 10px;
-  flex-wrap: wrap;
-  padding: 8px 14px 18px;
+.modal.show{
+display:flex;
 }
 
-.tabs button {
-  border: 1px solid rgba(155, 210, 255, 0.22);
-  background: rgba(255, 255, 255, 0.06);
-  color: #eaf5ff;
-  padding: 11px 16px;
-  border-radius: 999px;
-  cursor: pointer;
-  font-size: 0.95rem;
-  font-weight: 700;
-  transition:
-    transform 0.18s ease,
-    background 0.18s ease,
-    border-color 0.18s ease,
-    box-shadow 0.18s ease;
-  backdrop-filter: blur(8px);
+.modalBox{
+background:white;
+color:black;
+padding:20px;
+border-radius:10px;
+display:flex;
+flex-direction:column;
+gap:10px;
 }
 
-.tabs button:hover {
-  transform: translateY(-1px);
-  background: rgba(255, 255, 255, 0.1);
-  border-color: rgba(155, 210, 255, 0.38);
+.adminFloating{
+position:fixed;
+bottom:20px;
+right:20px;
+background:#3b82f6;
+color:white;
+border:none;
+padding:12px 16px;
+border-radius:8px;
+cursor:pointer;
 }
 
-.tabs button.active {
-  background: linear-gradient(180deg, rgba(100, 180, 255, 0.35), rgba(70, 130, 230, 0.22));
-  border-color: rgba(144, 211, 255, 0.7);
-  box-shadow: 0 8px 18px rgba(74, 136, 229, 0.24);
-  color: #ffffff;
+.adminPanel{
+position:fixed;
+top:50%;
+left:50%;
+transform:translate(-50%,-50%);
+background:white;
+color:black;
+padding:20px;
+border-radius:10px;
+display:none;
+flex-direction:column;
+gap:10px;
 }
 
-/* ---------- grid ---------- */
-.grid {
-  width: min(1300px, calc(100% - 24px));
-  margin: 0 auto 34px;
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(235px, 1fr));
-  gap: 14px;
-}
-
-/* ---------- slot ---------- */
-.slot {
-  min-height: 116px;
-  padding: 14px;
-  border-radius: 18px;
-  border: 1px solid rgba(173, 214, 255, 0.14);
-  background: rgba(255, 255, 255, 0.07);
-  box-shadow: 0 10px 24px rgba(0, 0, 0, 0.18);
-  backdrop-filter: blur(8px);
-  transition:
-    transform 0.18s ease,
-    border-color 0.18s ease,
-    box-shadow 0.18s ease,
-    background 0.18s ease;
-}
-
-.slot:hover {
-  transform: translateY(-2px);
-}
-
-.slot.available {
-  cursor: pointer;
-}
-
-.slot.available:hover {
-  border-color: rgba(96, 233, 154, 0.55);
-  box-shadow: 0 12px 28px rgba(56, 173, 110, 0.18);
-}
-
-.slot.reserved {
-  cursor: pointer;
-  border-color: rgba(255, 138, 138, 0.18);
-}
-
-.slot.reserved:hover {
-  border-color: rgba(255, 138, 138, 0.48);
-  box-shadow: 0 12px 28px rgba(190, 75, 75, 0.16);
-}
-
-.slot.locked {
-  opacity: 0.8;
-  border-color: rgba(196, 208, 224, 0.14);
-  background: rgba(255, 255, 255, 0.045);
-  cursor: not-allowed;
-}
-
-.slot.selected {
-  outline: 2px solid rgba(170, 219, 255, 0.9);
-  outline-offset: 0;
-}
-
-.slot.highlightAvailable {
-  border-color: rgba(86, 213, 137, 0.85);
-  box-shadow: 0 0 0 1px rgba(86, 213, 137, 0.18), 0 12px 28px rgba(56, 173, 110, 0.2);
-}
-
-.slot.highlightReserved {
-  border-color: rgba(255, 123, 123, 0.85);
-  box-shadow: 0 0 0 1px rgba(255, 123, 123, 0.14), 0 12px 28px rgba(190, 75, 75, 0.18);
-}
-
-.timeRow {
-  display: flex;
-  justify-content: space-between;
-  align-items: flex-start;
-  gap: 8px;
-  margin-bottom: 10px;
-}
-
-.timeUTC {
-  font-size: 0.94rem;
-  font-weight: 800;
-  color: #eef7ff;
-  line-height: 1.35;
-}
-
-.timeLocal {
-  font-size: 0.88rem;
-  color: #b9d5ef;
-  margin-bottom: 12px;
-}
-
-.statusAvailable,
-.statusReserved {
-  flex-shrink: 0;
-  padding: 4px 9px;
-  border-radius: 999px;
-  font-size: 0.78rem;
-  font-weight: 800;
-  white-space: nowrap;
-}
-
-.statusAvailable {
-  background: rgba(86, 213, 137, 0.16);
-  color: #87efaf;
-  border: 1px solid rgba(86, 213, 137, 0.3);
-}
-
-.statusReserved {
-  background: rgba(255, 123, 123, 0.14);
-  color: #ffb1b1;
-  border: 1px solid rgba(255, 123, 123, 0.28);
-}
-
-.bookingInfo {
-  min-height: 22px;
-  font-size: 0.92rem;
-  color: #edf5ff;
-  line-height: 1.35;
-  word-break: break-word;
-}
-
-/* ---------- modal ---------- */
-.modal {
-  position: fixed;
-  inset: 0;
-  display: none;
-  align-items: center;
-  justify-content: center;
-  padding: 20px;
-  background: rgba(3, 8, 18, 0.68);
-  backdrop-filter: blur(6px);
-  z-index: 10;
-}
-
-.modal.show {
-  display: flex;
-}
-
-.modalBox {
-  width: 100%;
-  max-width: 420px;
-  padding: 22px;
-  border-radius: 22px;
-  background: linear-gradient(180deg, rgba(20, 35, 62, 0.96), rgba(12, 24, 46, 0.98));
-  border: 1px solid rgba(162, 213, 255, 0.2);
-  box-shadow: 0 18px 50px rgba(0, 0, 0, 0.36);
-}
-
-.modalBox h3 {
-  margin: 0 0 16px;
-  font-size: 1.22rem;
-  color: #f3f9ff;
-}
-
-.modalBox input {
-  width: 100%;
-  margin-bottom: 11px;
-  padding: 12px 13px;
-  border-radius: 12px;
-  border: 1px solid rgba(158, 211, 255, 0.18);
-  background: rgba(255, 255, 255, 0.08);
-  color: #f5f9ff;
-  font-size: 0.96rem;
-  outline: none;
-}
-
-.modalBox input::placeholder {
-  color: #b7c9dc;
-}
-
-.modalBox input:focus {
-  border-color: rgba(149, 214, 255, 0.68);
-  box-shadow: 0 0 0 3px rgba(117, 182, 255, 0.12);
-}
-
-.modalBox button {
-  width: 100%;
-  padding: 12px 14px;
-  margin-top: 6px;
-  border: none;
-  border-radius: 12px;
-  cursor: pointer;
-  font-size: 0.97rem;
-  font-weight: 800;
-  transition:
-    transform 0.15s ease,
-    opacity 0.15s ease;
-}
-
-.modalBox button:hover {
-  transform: translateY(-1px);
-}
-
-.modalBox button:first-of-type {
-  background: linear-gradient(180deg, #66b8ff 0%, #4d8eff 100%);
-  color: white;
-  box-shadow: 0 10px 24px rgba(77, 142, 255, 0.28);
-}
-
-.modalBox button:last-of-type {
-  background: rgba(255, 255, 255, 0.1);
-  color: #eef7ff;
-}
-
-/* ---------- responsive ---------- */
-@media (max-width: 900px) {
-  .grid {
-    grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
-  }
-}
-
-@media (max-width: 640px) {
-  header {
-    padding-top: 24px;
-  }
-
-  header h1 {
-    font-size: 1.6rem;
-  }
-
-  #countdown {
-    font-size: 0.9rem;
-    padding: 9px 13px;
-  }
-
-  .tabs {
-    gap: 8px;
-    padding: 8px 12px 16px;
-  }
-
-  .tabs button {
-    width: 100%;
-    max-width: 360px;
-  }
-
-  .grid {
-    width: calc(100% - 16px);
-    grid-template-columns: 1fr;
-    gap: 12px;
-  }
-
-  .slot {
-    min-height: 104px;
-    padding: 13px;
-  }
-
-  .timeRow {
-    flex-direction: column;
-    align-items: flex-start;
-  }
-
-  .modal {
-    padding: 14px;
-  }
-
-  .modalBox {
-    padding: 18px;
-    border-radius: 18px;
-  }
+.adminPanel.show{
+display:flex;
 }
