@@ -680,3 +680,31 @@ renderAllianceSuggestions();
 initSnow();
 drawSnow();
 loadSlots();
+
+var secretClickCount = 0;
+var secretClickTimer = null;
+
+function registerSecretClick() {
+  secretClickCount++;
+
+  clearTimeout(secretClickTimer);
+
+  secretClickTimer = setTimeout(function () {
+    secretClickCount = 0;
+  }, 1200);
+
+  if (secretClickCount >= 3) {
+    secretClickCount = 0;
+    openAdmin();
+  }
+}
+
+var marshmallowBtn = document.getElementById("marshmallowSecret");
+if (marshmallowBtn) {
+  marshmallowBtn.addEventListener("click", registerSecretClick);
+}
+
+var snowBtn = document.getElementById("snowSecret");
+if (snowBtn) {
+  snowBtn.addEventListener("click", registerSecretClick);
+}
