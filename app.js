@@ -55,7 +55,7 @@ function generateSlots(data){
             let div=document.createElement("div");
             div.id=id;
             div.classList.add("slot");
-            div.style.minHeight="120px"; // 항상 동일 높이
+            div.style.minHeight="120px";
 
             let slot=data[id];
 
@@ -112,6 +112,34 @@ function updateTopSpeedups(data){
 }
 
 loadSlots();
+
+// Reserve / Cancel buttons
+document.getElementById("reserveBtn").addEventListener("click", ()=>{
+    if(!selectedSlot) return;
+    const alliance=document.getElementById("alliance").value;
+    const player=document.getElementById("player").value;
+    const daysSaved=document.getElementById("daysSaved").value;
+    const password=document.getElementById("password").value;
+    db.collection("slots").doc(selectedSlot).set({alliance,player,daysSaved,password}).then(()=>{
+        closeModal();
+        loadSlots();
+    });
+});
+
+document.getElementById("cancelBtn").addEventListener("click", ()=>{
+    if(!selectedSlot) return;
+    const cancelPassword=document.getElementById("cancelPassword").value;
+    db.collection("slots").doc(selectedSlot).get().then(doc=>{
+        if(doc.exists && doc.data().password===cancelPassword){
+            db.collection("slots").doc(selectedSlot).delete().then(()=>{
+                closeCancelModal();
+                loadSlots();
+            });
+        }else{
+            alert("Password incorrect");
+        }
+    });
+});
 
 // Snow
 const canvas=document.getElementById("snow");
