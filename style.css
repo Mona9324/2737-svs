@@ -45,7 +45,7 @@ h1 {
   background: rgba(255, 255, 255, 0.95);
   padding: 10px 12px;
   border-radius: 10px;
-  box-shadow: 0 0 10px rgba(0,0,0,0.12);
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.12);
   text-align: left;
 }
 
@@ -219,14 +219,12 @@ h1 {
   word-break: break-word;
 }
 
-/* 모달 */
+/* modal */
 .modal {
   display: none;
   position: fixed;
   inset: 0;
-  background: rgba(0,0,0,0.35);
-  align-items: center;
-  justify-content: center;
+  background: rgba(0, 0, 0, 0.35);
   padding: 16px;
   box-sizing: border-box;
   z-index: 1000;
@@ -234,6 +232,8 @@ h1 {
 
 .modal.show {
   display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .modalBox {
@@ -246,7 +246,7 @@ h1 {
   flex-direction: column;
   gap: 10px;
   box-sizing: border-box;
-  box-shadow: 0 8px 30px rgba(0,0,0,0.18);
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.18);
 }
 
 .modalBox h3 {
@@ -306,7 +306,7 @@ h1 {
   background: #fff;
   padding: 22px;
   border-radius: 14px;
-  box-shadow: 0 0 20px rgba(0,0,0,0.22);
+  box-shadow: 0 0 20px rgba(0, 0, 0, 0.22);
   z-index: 1001;
   box-sizing: border-box;
 }
