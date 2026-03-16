@@ -4,9 +4,54 @@ let cancelSlot=null
 
 const ADMIN_PASSWORD="2737admin"
 
-let adminAuthenticated=false
-
 const grid=document.getElementById("slots")
+
+/* UTC CLOCK */
+
+function updateUTCClock(){
+
+let now=new Date()
+
+let h=String(now.getUTCHours()).padStart(2,"0")
+let m=String(now.getUTCMinutes()).padStart(2,"0")
+
+document.getElementById("utcClock").innerText=
+"Current UTC Time : "+h+":"+m
+
+}
+
+setInterval(updateUTCClock,1000)
+updateUTCClock()
+
+/* BOOKING TIMER */
+
+const bookingOpenTime=new Date("2026-03-20T00:00:00Z")
+
+function updateOpenTimer(){
+
+let now=new Date()
+
+let diff=bookingOpenTime-now
+
+if(diff<=0){
+
+document.getElementById("openTimer").innerText="Booking is OPEN"
+return
+
+}
+
+let h=Math.floor(diff/1000/60/60)
+let m=Math.floor(diff/1000/60)%60
+
+document.getElementById("openTimer").innerText=
+"Booking opens in "+h+"h "+m+"m"
+
+}
+
+setInterval(updateOpenTimer,60000)
+updateOpenTimer()
+
+/* LOAD SLOTS */
 
 function loadSlots(){
 
@@ -19,6 +64,7 @@ data[doc.id]=doc.data()
 
 generateSlots(data)
 updateCounts(data)
+updateRanking(data)
 
 })
 
@@ -111,6 +157,50 @@ document.getElementById("availableCount").innerText="Available "+(total-reserved
 
 }
 
+/* RANKING */
+
+function updateRanking(data){
+
+let list=[]
+
+for(let key in data){
+
+if(!key.startsWith(currentBuff)) continue
+
+let slot=data[key]
+
+let days=parseInt(slot.days)
+
+if(!isNaN(days)){
+
+list.push({
+alliance:slot.alliance,
+player:slot.player,
+days:days
+})
+
+}
+
+}
+
+list.sort((a,b)=>b.days-a.days)
+
+let html=""
+
+for(let i=0;i<Math.min(list.length,5);i++){
+
+let p=list[i]
+
+html+=(i+1)+"️⃣ ["+p.alliance+"] "+p.player+" — "+p.days+"<br>"
+
+}
+
+document.getElementById("ranking").innerHTML=html
+
+}
+
+/* BOOKING */
+
 function openModal(id){
 selectedSlot=id
 document.getElementById("modal").style.display="flex"
@@ -143,17 +233,27 @@ closeModal()
 
 }
 
-/* CANCEL SYSTEM */
+/* CANCEL */
 
 function openCancelModal(id){
 
 cancelSlot=id
+document.getElementById("cancelPassword").value=""
+document.getElementById("cancelModal").style.display="flex"
 
-let pass=prompt("Enter your cancel password")
+}
 
-if(pass==null) return
+function closeCancelModal(){
 
-db.collection("slots").doc(id).get().then(doc=>{
+document.getElementById("cancelModal").style.display="none"
+
+}
+
+function confirmCancel(){
+
+let pass=document.getElementById("cancelPassword").value
+
+db.collection("slots").doc(cancelSlot).get().then(doc=>{
 
 if(!doc.exists) return
 
@@ -164,9 +264,9 @@ alert("Wrong password")
 return
 }
 
-if(confirm("Cancel this reservation?")){
-db.collection("slots").doc(id).delete()
-}
+db.collection("slots").doc(cancelSlot).delete()
+
+closeCancelModal()
 
 })
 
