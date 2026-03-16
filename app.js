@@ -18,12 +18,7 @@ function updateCountdown(){
 setInterval(updateCountdown,60000);
 updateCountdown();
 
-// Helper
-function padTime(h,m){
-    if(m>=60){h++;m-=60;}
-    h%=24;
-    return String(h).padStart(2,"0")+":"+String(m).padStart(2,"0");
-}
+function padTime(h,m){if(m>=60){h++;m-=60;} h%=24; return String(h).padStart(2,"0")+":"+String(m).padStart(2,"0");}
 
 // Tabs
 function switchBuff(buff){
@@ -33,7 +28,7 @@ function switchBuff(buff){
     loadSlots();
 }
 
-// Load Slots
+// Load slots
 function loadSlots(){
     db.collection("settings").doc("booking").onSnapshot(doc=>{
         bookingOpen = doc.exists ? doc.data().open : false;
@@ -47,7 +42,7 @@ function loadSlots(){
     });
 }
 
-// Generate Slots
+// Generate slots
 function generateSlots(data){
     grid.innerHTML="";
     for(let h=0;h<24;h++){
@@ -59,37 +54,41 @@ function generateSlots(data){
             let id=currentBuff+"_"+utcTime;
             let div=document.createElement("div");
             div.id=id;
+            div.classList.add("slot");
+            div.style.minHeight="120px"; // 항상 동일 높이
 
             let slot=data[id];
 
             if(!bookingOpen){
-                div.className="slot locked";
+                div.classList.add("locked");
                 div.innerHTML=`<b>${utcTime} - ${padTime(h,m+30)} UTC</b><br>${localTime}<br>🔒`;
             }else if(!slot){
-                div.className="slot available";
+                div.classList.add("available");
                 div.innerHTML=`<div class='timeRow'><span class='timeUTC'>${utcTime} - ${padTime(h,m+30)} UTC</span><span class='statusAvailable'>Available</span></div><div class='timeLocal'>${localTime}</div>`;
-                div.onclick=()=>openReserveModal(id);
+                div.onclick=()=>{highlightSlot(div,true); openReserveModal(id);}
             }else{
-                div.className="slot reserved";
+                div.classList.add("reserved");
                 div.innerHTML=`<div class='timeRow'><span class='timeUTC'>${utcTime} - ${padTime(h,m+30)} UTC</span><span class='statusReserved'>Reserved</span></div><div class='timeLocal'>${localTime}</div><div class='bookingInfo'>[${slot.alliance}] ${slot.player} (${slot.daysSaved})</div>`;
-                div.onclick=()=>openCancelModal(id);
+                div.onclick=()=>{highlightSlot(div,false); openCancelModal(id);}
             }
             grid.appendChild(div);
         }
     }
 }
 
+// Highlight
+function highlightSlot(div,isAvailable){
+    document.querySelectorAll(".slot").forEach(s=>s.classList.remove("selected","highlightAvailable","highlightReserved"));
+    div.classList.add("selected");
+    if(isAvailable) div.classList.add("highlightAvailable");
+    else div.classList.add("highlightReserved");
+}
+
 // Modal
-function openReserveModal(id){
-    selectedSlot=id;
-    document.getElementById("modal").style.display="flex";
-}
-function closeModal(){document.getElementById("modal").style.display="none";}
-function openCancelModal(id){
-    selectedSlot=id;
-    document.getElementById("cancelModal").style.display="flex";
-}
-function closeCancelModal(){document.getElementById("cancelModal").style.display="none";}
+function openReserveModal(id){ selectedSlot=id; document.getElementById("modal").style.display="flex";}
+function closeModal(){ document.getElementById("modal").style.display="none";}
+function openCancelModal(id){ selectedSlot=id; document.getElementById("cancelModal").style.display="flex";}
+function closeCancelModal(){ document.getElementById("cancelModal").style.display="none";}
 
 // Counts
 function updateCounts(data){
@@ -120,7 +119,7 @@ const ctx=canvas.getContext("2d");
 canvas.width=window.innerWidth;
 canvas.height=window.innerHeight;
 const flakes=[];
-for(let i=0;i<200;i++) flakes.push({x:Math.random()*canvas.width,y:Math.random()*canvas.height,radius:Math.random()*3+1,speed:Math.random()*1+0.5});
+for(let i=0;i<200;i++) flakes.push({x:Math.random()*canvas.width,y:Math.random()*canvas.height,radius:Math.random()*3+1,speed:Math.random()*0.7+0.3});
 function drawSnow(){
     ctx.clearRect(0,0,canvas.width,canvas.height);
     flakes.forEach(f=>{
