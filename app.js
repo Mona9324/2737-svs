@@ -6,8 +6,6 @@ const ADMIN_PASSWORD="2737admin"
 let adminAuthenticated=false
 let bookingOpen=false
 
-const svsDate=new Date("2026-03-23T00:00:00Z")
-
 const grid=document.getElementById("slots")
 
 db.collection("settings").doc("booking").onSnapshot(doc=>{
@@ -22,7 +20,6 @@ function loadSlots(){
 db.collection("slots").onSnapshot(snapshot=>{
 
 let data={}
-
 snapshot.forEach(doc=>{
 data[doc.id]=doc.data()
 })
@@ -35,10 +32,8 @@ updateCounts(data)
 }
 
 function switchBuff(buff){
-
 currentBuff=buff
 loadSlots()
-
 }
 
 function generateSlots(data){
@@ -86,7 +81,7 @@ div.className="slot available"
 
 div.innerHTML=
 "<div class='timeUTC'>"+startUTC+" - "+endUTC+" UTC</div>"+
-"<div class='timeLocal'>"+localStartStr+" - "+localEndStr+"</div><br>예약 가능"
+"<div class='timeLocal'>"+localStartStr+" - "+localEndStr+"</div><br>Available"
 
 div.onclick=()=>openModal(id)
 
@@ -124,16 +119,12 @@ document.getElementById("availableCount").innerText="Available "+(total-reserved
 }
 
 function openModal(id){
-
 selectedSlot=id
 document.getElementById("modal").style.display="flex"
-
 }
 
 function closeModal(){
-
 document.getElementById("modal").style.display="none"
-
 }
 
 function confirmBooking(){
@@ -144,14 +135,14 @@ let password=document.getElementById("password").value
 let days=document.getElementById("daysSaved").value
 
 if(!alliance || !player || !password){
-alert("모든 정보를 입력하세요")
+alert("Please fill all fields")
 return
 }
 
 db.collection("slots").doc(selectedSlot).get().then(doc=>{
 
 if(doc.exists){
-alert("이미 예약된 슬롯입니다")
+alert("This slot is already reserved")
 return
 }
 
@@ -162,13 +153,13 @@ password,
 days
 })
 
-})
-
 closeModal()
+
+})
 
 }
 
-/* SNOW */
+/* BLUE SNOW */
 
 const canvas=document.getElementById("snow")
 const ctx=canvas.getContext("2d")
@@ -178,15 +169,13 @@ canvas.height=window.innerHeight
 
 let snowflakes=[]
 
-for(let i=0;i<120;i++){
+for(let i=0;i<100;i++){
 
 snowflakes.push({
-
 x:Math.random()*canvas.width,
 y:Math.random()*canvas.height,
-r:Math.random()*4+2,
+r:Math.random()*3+1,
 d:Math.random()+1
-
 })
 
 }
@@ -195,7 +184,7 @@ function drawSnow(){
 
 ctx.clearRect(0,0,canvas.width,canvas.height)
 
-ctx.fillStyle="rgba(255,255,255,0.9)"
+ctx.fillStyle="#6fa8ff"
 
 ctx.beginPath()
 
@@ -225,12 +214,10 @@ f.y+=Math.pow(f.d,2)+1
 if(f.y>canvas.height){
 
 snowflakes[i]={
-
 x:Math.random()*canvas.width,
 y:0,
 r:f.r,
 d:f.d
-
 }
 
 }
