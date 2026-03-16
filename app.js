@@ -10,31 +10,11 @@ const svsDate=new Date("2026-03-23T00:00:00Z")
 
 const grid=document.getElementById("slots")
 
-function updateCountdown(){
-
-let now=new Date()
-let diff=svsDate-now
-
-let d=Math.floor(diff/(1000*60*60*24))
-let h=Math.floor((diff/(1000*60*60))%24)
-let m=Math.floor((diff/(1000*60))%60)
-
-document.getElementById("countdown").innerHTML=
-"SVS begins in "+d+"d "+h+"h "+m+"m"
-
-}
-
-setInterval(updateCountdown,60000)
-updateCountdown()
-
 db.collection("settings").doc("booking").onSnapshot(doc=>{
-
 if(doc.exists){
 bookingOpen=doc.data().open
 }
-
 loadSlots()
-
 })
 
 function loadSlots(){
@@ -42,6 +22,7 @@ function loadSlots(){
 db.collection("slots").onSnapshot(snapshot=>{
 
 let data={}
+
 snapshot.forEach(doc=>{
 data[doc.id]=doc.data()
 })
@@ -71,6 +52,7 @@ let startUTC=String(h).padStart(2,"0")+":"+String(m).padStart(2,"0")
 
 let endM=m+30
 let endH=h
+
 if(endM==60){endM=0;endH++}
 
 let endUTC=String(endH).padStart(2,"0")+":"+String(endM).padStart(2,"0")
@@ -96,8 +78,7 @@ div.className="slot locked"
 
 div.innerHTML=
 "<div class='timeUTC'>"+startUTC+" - "+endUTC+" UTC</div>"+
-"<div class='timeLocal'>"+localStartStr+" - "+localEndStr+"</div>"+
-"<br>🔒"
+"<div class='timeLocal'>"+localStartStr+" - "+localEndStr+"</div><br>🔒"
 
 }else if(!slot){
 
@@ -105,8 +86,7 @@ div.className="slot available"
 
 div.innerHTML=
 "<div class='timeUTC'>"+startUTC+" - "+endUTC+" UTC</div>"+
-"<div class='timeLocal'>"+localStartStr+" - "+localEndStr+"</div>"+
-"<br>Available"
+"<div class='timeLocal'>"+localStartStr+" - "+localEndStr+"</div><br>예약 가능"
 
 div.onclick=()=>openModal(id)
 
@@ -117,8 +97,7 @@ div.className="slot reserved"
 div.innerHTML=
 "<div class='timeUTC'>"+startUTC+" - "+endUTC+" UTC</div>"+
 "<div class='timeLocal'>"+localStartStr+" - "+localEndStr+"</div>"+
-"<div class='bookingInfo'>["+slot.alliance+"] "+slot.player+
-" ("+slot.days+")</div>"
+"<div class='bookingInfo'>["+slot.alliance+"] "+slot.player+" ("+slot.days+")</div>"
 
 }
 
@@ -165,88 +144,27 @@ let password=document.getElementById("password").value
 let days=document.getElementById("daysSaved").value
 
 if(!alliance || !player || !password){
-
-alert("Fill all fields")
+alert("모든 정보를 입력하세요")
 return
-
 }
 
-db.collection("slots").doc(selectedSlot).create({
+db.collection("slots").doc(selectedSlot).get().then(doc=>{
 
+if(doc.exists){
+alert("이미 예약된 슬롯입니다")
+return
+}
+
+db.collection("slots").doc(selectedSlot).set({
 alliance,
 player,
 password,
 days
-
-}).catch(()=>{
-
-alert("Already reserved")
+})
 
 })
 
 closeModal()
-
-}
-
-function openAdmin(){
-
-document.getElementById("adminPanel").style.display="block"
-
-}
-
-function closeAdmin(){
-
-document.getElementById("adminPanel").style.display="none"
-
-}
-
-function adminLogin(){
-
-let pass=document.getElementById("adminPass").value
-
-if(pass!==ADMIN_PASSWORD){
-
-alert("Wrong password")
-return
-
-}
-
-adminAuthenticated=true
-
-document.getElementById("adminLogin").style.display="none"
-document.getElementById("adminControls").style.display="block"
-
-}
-
-function setBooking(state){
-
-if(!adminAuthenticated){
-alert("Admin login required")
-return
-}
-
-db.collection("settings").doc("booking").set({
-open:state
-})
-
-}
-
-function clearAll(){
-
-if(!adminAuthenticated){
-alert("Admin login required")
-return
-}
-
-if(!confirm("Delete all reservations?")) return
-
-db.collection("slots").get().then(snapshot=>{
-
-snapshot.forEach(doc=>{
-doc.ref.delete()
-})
-
-})
 
 }
 
@@ -260,13 +178,13 @@ canvas.height=window.innerHeight
 
 let snowflakes=[]
 
-for(let i=0;i<80;i++){
+for(let i=0;i<120;i++){
 
 snowflakes.push({
 
 x:Math.random()*canvas.width,
 y:Math.random()*canvas.height,
-r:Math.random()*3+1,
+r:Math.random()*4+2,
 d:Math.random()+1
 
 })
@@ -277,7 +195,8 @@ function drawSnow(){
 
 ctx.clearRect(0,0,canvas.width,canvas.height)
 
-ctx.fillStyle="white"
+ctx.fillStyle="rgba(255,255,255,0.9)"
+
 ctx.beginPath()
 
 for(let i=0;i<snowflakes.length;i++){
@@ -320,4 +239,4 @@ d:f.d
 
 }
 
-setInterval(drawSnow,33)
+setInterval(drawSnow,30)
