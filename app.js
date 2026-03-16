@@ -15,6 +15,11 @@ const rankingBox=document.getElementById("rankingBox");
 
 const dbRef=window.db;
 
+div.innerHTML = `
+<div class="timeRow">${utcTime} - ${padTime(h,m+30)} UTC</div>
+<div class="timeLocal">${localTime}</div>
+<div class="bookingInfo">[${slot.alliance}] ${slot.player} (${slot.daysSaved} Speed-up)</div>
+`;
 
 function padTime(h,m){
 if(m>=60){
