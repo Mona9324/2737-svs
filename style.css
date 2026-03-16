@@ -45,12 +45,18 @@ header{
     position:absolute;
     top:10px;
     right:20px;
-    width:250px;
-    text-align:left;
+    width:280px;
     background:#fff;
-    padding:6px;
+    padding:10px;
     border-radius:10px;
     box-shadow:0 0 10px rgba(0,0,0,0.15);
+    text-align:center;
+}
+
+#rankingBox > div{
+    display:flex;
+    justify-content:center;
+    gap:20px;
 }
 
 .tabs{
@@ -101,16 +107,8 @@ header{
 .slot.reserved{border:2px solid #e06666; background:#fdecec;}
 .slot.locked{border:2px solid #aaa; background:#eee;}
 
-/* 클릭 강조: 예약 가능 = 연초록, 예약됨 = 연붉은색 */
-.slot.available.selected {
-    background-color: #c8f0c8;
-    border-color: #66cc66;
-}
-
-.slot.reserved.selected {
-    background-color: #f9cfcf;
-    border-color: #e06666;
-}
+.slot.available.selected {background-color:#a0d87a; border-color:#66cc66;}
+.slot.reserved.selected {background-color:#f59898; border-color:#e06666;}
 
 .timeRow{
     display:flex;
