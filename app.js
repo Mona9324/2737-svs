@@ -15,41 +15,16 @@ let now=new Date()
 let h=String(now.getUTCHours()).padStart(2,"0")
 let m=String(now.getUTCMinutes()).padStart(2,"0")
 
-document.getElementById("utcClock").innerText=
-"Current UTC Time : "+h+":"+m
+let el=document.getElementById("utcClock")
+if(el){
+el.innerText="Current UTC Time : "+h+":"+m
+}
 
 }
 
 setInterval(updateUTCClock,1000)
 updateUTCClock()
 
-/* BOOKING TIMER */
-
-const bookingOpenTime=new Date("2026-03-20T00:00:00Z")
-
-function updateOpenTimer(){
-
-let now=new Date()
-
-let diff=bookingOpenTime-now
-
-if(diff<=0){
-
-document.getElementById("openTimer").innerText="Booking is OPEN"
-return
-
-}
-
-let h=Math.floor(diff/1000/60/60)
-let m=Math.floor(diff/1000/60)%60
-
-document.getElementById("openTimer").innerText=
-"Booking opens in "+h+"h "+m+"m"
-
-}
-
-setInterval(updateOpenTimer,60000)
-updateOpenTimer()
 
 /* FIREBASE LOAD */
 
@@ -72,10 +47,14 @@ updateRanking(data)
 
 loadSlots()
 
+
 function switchBuff(buff){
+
 currentBuff=buff
 loadSlots()
+
 }
+
 
 /* SLOT GENERATION */
 
@@ -90,7 +69,11 @@ let startUTC=String(h).padStart(2,"0")+":"+String(m).padStart(2,"0")
 
 let endM=m+30
 let endH=h
-if(endM==60){endM=0;endH++}
+
+if(endM==60){
+endM=0
+endH++
+}
 
 let endUTC=String(endH).padStart(2,"0")+":"+String(endM).padStart(2,"0")
 
@@ -104,9 +87,11 @@ let localStartStr=localStart.toLocaleTimeString([], {hour:'2-digit',minute:'2-di
 let localEndStr=localEnd.toLocaleTimeString([], {hour:'2-digit',minute:'2-digit'})
 
 let id=currentBuff+"_"+startUTC
+
 let div=document.createElement("div")
 
 let slot=data[id]
+
 
 if(!slot){
 
@@ -144,6 +129,7 @@ grid.appendChild(div)
 
 }
 
+
 /* COUNT */
 
 function updateCounts(data){
@@ -156,12 +142,16 @@ if(key.startsWith(currentBuff)) reserved++
 
 let total=48
 
-document.getElementById("reservedCount").innerText="Reserved "+reserved
-document.getElementById("availableCount").innerText="Available "+(total-reserved)
+let r=document.getElementById("reservedCount")
+let a=document.getElementById("availableCount")
+
+if(r) r.innerText="Reserved "+reserved
+if(a) a.innerText="Available "+(total-reserved)
 
 }
 
-/* RANKING */
+
+/* SPEEDUP RANKING */
 
 function updateRanking(data){
 
@@ -199,19 +189,27 @@ html+=(i+1)+"️⃣ ["+p.alliance+"] "+p.player+" — "+p.days+"<br>"
 
 }
 
-document.getElementById("ranking").innerHTML=html
+let el=document.getElementById("ranking")
+
+if(el) el.innerHTML=html
 
 }
+
 
 /* BOOKING */
 
 function openModal(id){
+
 selectedSlot=id
+
 document.getElementById("modal").style.display="flex"
+
 }
 
 function closeModal(){
+
 document.getElementById("modal").style.display="none"
+
 }
 
 function confirmBooking(){
@@ -222,27 +220,35 @@ let password=document.getElementById("password").value
 let days=document.getElementById("daysSaved").value
 
 if(!alliance || !player || !password){
+
 alert("Please fill all fields")
+
 return
+
 }
 
 db.collection("slots").doc(selectedSlot).set({
+
 alliance,
 player,
 password,
 days
+
 })
 
 closeModal()
 
 }
 
-/* CANCEL */
+
+/* CANCEL RESERVATION */
 
 function openCancelModal(id){
 
 cancelSlot=id
+
 document.getElementById("cancelPassword").value=""
+
 document.getElementById("cancelModal").style.display="flex"
 
 }
@@ -264,8 +270,11 @@ if(!doc.exists) return
 let data=doc.data()
 
 if(pass!==data.password){
+
 alert("Wrong password")
+
 return
+
 }
 
 db.collection("slots").doc(cancelSlot).delete()
@@ -275,6 +284,61 @@ closeCancelModal()
 })
 
 }
+
+
+/* ADMIN */
+
+function openAdmin(){
+
+document.getElementById("adminPanel").style.display="block"
+
+}
+
+function closeAdmin(){
+
+document.getElementById("adminPanel").style.display="none"
+
+}
+
+function adminLogin(){
+
+let pass=document.getElementById("adminPass").value
+
+if(pass!==ADMIN_PASSWORD){
+
+alert("비밀번호 틀림")
+
+return
+
+}
+
+document.getElementById("adminLogin").style.display="none"
+document.getElementById("adminControls").style.display="block"
+
+}
+
+function setBooking(state){
+
+db.collection("settings").doc("booking").set({
+open:state
+})
+
+}
+
+function clearAll(){
+
+if(!confirm("모든 예약 삭제?")) return
+
+db.collection("slots").get().then(snapshot=>{
+
+snapshot.forEach(doc=>{
+doc.ref.delete()
+})
+
+})
+
+}
+
 
 /* SNOW */
 
@@ -297,10 +361,12 @@ let snowflakes=[]
 for(let i=0;i<100;i++){
 
 snowflakes.push({
+
 x:Math.random()*canvas.width,
 y:Math.random()*canvas.height,
 r:Math.random()*3+1,
 d:Math.random()+1
+
 })
 
 }
@@ -339,10 +405,12 @@ f.y+=Math.pow(f.d,2)+1
 if(f.y>canvas.height){
 
 snowflakes[i]={
+
 x:Math.random()*canvas.width,
 y:0,
 r:f.r,
 d:f.d
+
 }
 
 }
