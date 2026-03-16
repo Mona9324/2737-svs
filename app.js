@@ -7,7 +7,6 @@ const svsDate = new Date("2026-03-23T00:00:00Z");
 
 const grid = document.getElementById("slots");
 const rankingBox = document.getElementById("rankingBox");
-
 const db = window.db || firebase.firestore();
 
 let allSlotsData = {};
@@ -15,10 +14,6 @@ let bookingUnsubscribe = null;
 let slotsUnsubscribe = null;
 
 const medalMap = ["🥇", "🥈", "🥉"];
-
-/* =========================
-   Utility
-========================= */
 
 function padTime(h, m) {
   if (m >= 60) {
@@ -60,13 +55,13 @@ function setActiveTab() {
     btn.classList.remove("active");
   });
 
-  const map = {
+  const activeId = {
     monday: "tab-monday",
     tuesday: "tab-tuesday",
     thursday: "tab-thursday"
-  };
+  }[currentBuff];
 
-  const activeBtn = document.getElementById(map[currentBuff]);
+  const activeBtn = document.getElementById(activeId);
   if (activeBtn) activeBtn.classList.add("active");
 }
 
@@ -82,19 +77,11 @@ function highlightSlot(div, isAvailable) {
   div.classList.add(isAvailable ? "highlightAvailable" : "highlightReserved");
 }
 
-/* =========================
-   Tab
-========================= */
-
 function switchBuff(buff) {
   currentBuff = buff;
   setActiveTab();
   renderAll();
 }
-
-/* =========================
-   Modal
-========================= */
 
 function openReserveModal(id) {
   if (!bookingOpen) {
@@ -127,10 +114,6 @@ function closeCancelModal() {
   clearSelection();
 }
 
-/* =========================
-   Admin
-========================= */
-
 function openAdmin() {
   document.getElementById("adminPanel").classList.add("show");
 }
@@ -153,10 +136,7 @@ function adminLogin() {
 function setBooking(isOpen) {
   if (!adminAuthenticated) return;
 
-  db.collection("settings").doc("booking").set(
-    { open: isOpen },
-    { merge: true }
-  )
+  db.collection("settings").doc("booking").set({ open: isOpen }, { merge: true })
     .then(() => {
       bookingOpen = isOpen;
       renderAll();
@@ -175,9 +155,7 @@ function clearAll() {
   db.collection("slots").get()
     .then((snapshot) => {
       const batch = db.batch();
-      snapshot.forEach((doc) => {
-        batch.delete(doc.ref);
-      });
+      snapshot.forEach((doc) => batch.delete(doc.ref));
       return batch.commit();
     })
     .then(() => {
@@ -189,19 +167,11 @@ function clearAll() {
     });
 }
 
-/* =========================
-   Ranking / Count
-========================= */
-
 function getCurrentBuffTop3() {
   return Object.entries(allSlotsData)
     .filter(([key, value]) => key.startsWith(currentBuff + "_") && value)
     .map(([, value]) => value)
-    .filter((slot) =>
-      slot.daysSaved !== undefined &&
-      slot.daysSaved !== null &&
-      slot.daysSaved !== ""
-    )
+    .filter((slot) => slot.daysSaved !== undefined && slot.daysSaved !== null && slot.daysSaved !== "")
     .sort((a, b) => Number(b.daysSaved) - Number(a.daysSaved))
     .slice(0, 3);
 }
@@ -250,10 +220,6 @@ function updateTopSpeedups() {
   rankingBox.classList.add("rankingUpdate");
 }
 
-/* =========================
-   Slots
-========================= */
-
 function generateSlots() {
   grid.innerHTML = "";
 
@@ -266,7 +232,6 @@ function generateSlots() {
 
       const localDate = new Date();
       localDate.setUTCHours(h, m, 0, 0);
-
       const localEndDate = new Date(localDate.getTime() + 30 * 60 * 1000);
 
       const localStart = localDate.toLocaleTimeString([], {
@@ -301,7 +266,7 @@ function generateSlots() {
           <div class="timeLocal">${localStart} - ${localEnd}</div>
           <div class="bookingInfo">Click to book this slot</div>
         `;
-        div.onclick = function () {
+        div.onclick = () => {
           highlightSlot(div, true);
           openReserveModal(id);
         };
@@ -315,7 +280,7 @@ function generateSlots() {
           <div class="timeLocal">${localStart} - ${localEnd}</div>
           <div class="bookingInfo">[${escapeHtml(slot.alliance)}] ${escapeHtml(slot.player)} (${Number(slot.daysSaved)})</div>
         `;
-        div.onclick = function () {
+        div.onclick = () => {
           highlightSlot(div, false);
           openCancelModal(id);
         };
@@ -332,16 +297,11 @@ function renderAll() {
   updateTopSpeedups();
 }
 
-/* =========================
-   Firestore listeners
-========================= */
-
 function attachRealtimeListeners() {
   if (bookingUnsubscribe) {
     bookingUnsubscribe();
     bookingUnsubscribe = null;
   }
-
   if (slotsUnsubscribe) {
     slotsUnsubscribe();
     slotsUnsubscribe = null;
@@ -377,10 +337,6 @@ function attachRealtimeListeners() {
 function loadSlots() {
   attachRealtimeListeners();
 }
-
-/* =========================
-   Booking
-========================= */
 
 function confirmBooking() {
   if (!selectedSlot) {
@@ -418,10 +374,10 @@ function confirmBooking() {
       }
 
       return docRef.set({
-        alliance: alliance,
-        player: player,
-        daysSaved: daysSaved,
-        password: password,
+        alliance,
+        player,
+        daysSaved,
+        password,
         buff: currentBuff,
         createdAt: firebase.firestore.FieldValue.serverTimestamp()
       });
@@ -476,10 +432,6 @@ function confirmCancel() {
     });
 }
 
-/* =========================
-   Snow
-========================= */
-
 const canvas = document.getElementById("snow");
 const ctx = canvas.getContext("2d");
 const flakes = [];
@@ -527,10 +479,6 @@ function drawSnow() {
 
   requestAnimationFrame(drawSnow);
 }
-
-/* =========================
-   Init
-========================= */
 
 window.addEventListener("resize", resizeCanvas);
 setInterval(updateCountdown, 60000);
