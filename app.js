@@ -154,16 +154,6 @@ function clearAll() {
     });
 }
 
-function getCurrentBuffData(data) {
-  const filtered = {};
-  Object.keys(data).forEach((key) => {
-    if (key.startsWith(`${currentBuff}_`)) {
-      filtered[key] = data[key];
-    }
-  });
-  return filtered;
-}
-
 function getBuffTop3(data, buff) {
   return Object.entries(data)
     .filter(([key, value]) => key.startsWith(`${buff}_`) && value)
@@ -210,7 +200,7 @@ function updateTopSpeedups(data) {
       top3.forEach((slot, idx) => {
         html += `
           <div class="rankingItem">
-            <span class="medal">${medalMap[idx] || "🏅"}</span>
+            <span class="medal">${medalMap[idx]}</span>
             <span class="rankingText">[${escapeHtml(slot.alliance || "-")}] ${escapeHtml(slot.player || "-")} (${Number(slot.daysSaved)})</span>
           </div>
         `;
@@ -220,7 +210,7 @@ function updateTopSpeedups(data) {
     html += `</div>`;
   });
 
-  html += '</div>';
+  html += `</div>`;
   rankingBox.innerHTML = html;
 }
 
