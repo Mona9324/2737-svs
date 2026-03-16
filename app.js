@@ -368,7 +368,7 @@ function confirmBooking() {
     const bookingDoc = await transaction.get(bookingRef);
     const slotDoc = await transaction.get(slotRef);
 
-    const isOpen = bookingDoc.exists ? Boolean(bookingDoc.data().open) : false;
+    const isOpen = bookingDoc.exists ? Boolean(bookingDoc.data().open) : true;
     if (!isOpen) {
       throw new Error("BOOKING_CLOSED");
     }
