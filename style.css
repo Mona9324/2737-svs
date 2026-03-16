@@ -5,128 +5,172 @@ box-sizing:border-box;
 body{
 margin:0;
 font-family:Arial, Helvetica, sans-serif;
-background:#0a1324;
-color:white;
+background:
+radial-gradient(circle at top, rgba(255,180,120,0.25), transparent 40%),
+linear-gradient(180deg,#1b1f36 0%,#2c2340 45%,#3a2744 100%);
+color:#f4f6ff;
+min-height:100vh;
 }
 
-/* HEADER */
+/* snow canvas */
+
+#snow{
+position:fixed;
+top:0;
+left:0;
+width:100%;
+height:100%;
+pointer-events:none;
+z-index:0;
+}
+
+header,.tabs,.grid,.modal{
+position:relative;
+z-index:1;
+}
 
 header{
 text-align:center;
-padding:20px;
+padding:30px 16px 20px;
 }
 
-h1{
-margin-bottom:10px;
+header h1{
+margin:0 0 10px;
+font-size:28px;
 }
 
-/* TABS */
+/* countdown */
+
+#countdown{
+font-weight:bold;
+margin-bottom:15px;
+}
+
+/* tabs */
 
 .tabs{
-text-align:center;
+display:flex;
+justify-content:center;
+gap:10px;
+flex-wrap:wrap;
 margin-bottom:10px;
 }
 
 .tabs button{
-margin:5px;
-padding:10px 15px;
 border:none;
-background:#1f3b73;
+background:#5a3d68;
 color:white;
+padding:10px 16px;
+border-radius:20px;
 cursor:pointer;
-border-radius:6px;
 font-size:14px;
+transition:0.2s;
 }
 
 .tabs button:hover{
-background:#315bb5;
+background:#7b558a;
 }
 
-/* STATS */
+/* stats */
 
 .slotStats{
 text-align:center;
 margin-bottom:15px;
 font-weight:bold;
-font-size:15px;
 }
 
 .availableDot{
 width:10px;
 height:10px;
-background:#00ff9d;
+background:#8cffb0;
 display:inline-block;
 border-radius:50%;
-margin-right:4px;
+margin-right:5px;
 }
 
 .reservedDot{
 width:10px;
 height:10px;
-background:#ff5b5b;
+background:#ff9a9a;
 display:inline-block;
 border-radius:50%;
 margin-left:15px;
-margin-right:4px;
+margin-right:5px;
 }
 
-/* GRID */
+/* ranking */
+
+#rankingBox{
+max-width:700px;
+margin:auto;
+margin-bottom:10px;
+text-align:center;
+}
+
+/* grid */
 
 .grid{
 max-width:1400px;
 margin:auto;
 display:grid;
 grid-template-columns:repeat(auto-fill,minmax(300px,1fr));
-gap:12px;
+gap:14px;
 padding:20px;
 }
 
-/* SLOT */
+/* slot card */
 
 .slot{
-background:#13213f;
+background:rgba(255,255,255,0.08);
+border:1px solid rgba(255,255,255,0.12);
 padding:15px;
-border-radius:10px;
-cursor:pointer;
+border-radius:14px;
 transition:0.2s;
+cursor:pointer;
+backdrop-filter:blur(6px);
 }
 
 .slot:hover{
-transform:scale(1.02);
+transform:translateY(-2px);
 }
+
+/* available */
 
 .slot.available{
-border:2px solid #00ff9d;
+border-color:rgba(150,255,180,0.6);
 }
+
+/* reserved */
 
 .slot.reserved{
-border:2px solid #ff5b5b;
+border-color:rgba(255,150,150,0.6);
 }
+
+/* locked */
 
 .slot.locked{
-opacity:0.5;
+opacity:0.6;
 cursor:not-allowed;
-border:2px solid #888;
 }
 
-/* SLOT TEXT */
+/* slot text */
 
 .timeRow{
 font-weight:bold;
-margin-bottom:5px;
+margin-bottom:4px;
 }
 
 .timeLocal{
 font-size:13px;
-opacity:0.7;
+opacity:0.75;
+margin-bottom:6px;
 }
 
 .bookingInfo{
-margin-top:5px;
 font-size:14px;
 }
 
-/* MODAL */
+/* modal */
 
 .modal{
 position:fixed;
@@ -145,50 +189,45 @@ display:flex;
 }
 
 .modalBox{
-background:white;
+background:#ffffff;
 color:black;
 padding:20px;
 border-radius:10px;
 display:flex;
 flex-direction:column;
 gap:10px;
-min-width:250px;
+min-width:260px;
 }
 
 .modalBox input{
 padding:8px;
-font-size:14px;
 }
 
 .modalBox button{
 padding:10px;
 border:none;
-background:#1f3b73;
+background:#6b4e7d;
 color:white;
-cursor:pointer;
 border-radius:6px;
+cursor:pointer;
 }
 
-.modalBox button:hover{
-background:#315bb5;
-}
-
-/* ADMIN BUTTON */
+/* admin button */
 
 .adminFloating{
 position:fixed;
 bottom:20px;
 right:20px;
-background:#3b82f6;
+background:#ff8f66;
 color:white;
 border:none;
 padding:12px 16px;
-border-radius:8px;
+border-radius:10px;
 cursor:pointer;
-font-size:14px;
+font-weight:bold;
 }
 
-/* ADMIN PANEL */
+/* admin panel */
 
 .adminPanel{
 position:fixed;
@@ -198,26 +237,13 @@ transform:translate(-50%,-50%);
 background:white;
 color:black;
 padding:20px;
-border-radius:10px;
+border-radius:12px;
 display:none;
 flex-direction:column;
 gap:10px;
 z-index:10;
-min-width:250px;
 }
 
 .adminPanel.show{
 display:flex;
-}
-
-/* RANKING */
-
-#rankingBox{
-text-align:center;
-margin-bottom:10px;
-}
-
-.rankingItem{
-font-size:14px;
-margin:3px;
 }
