@@ -66,7 +66,6 @@ padding:12px 16px;
 border-radius:12px;
 min-height:80px;
 text-align:left;
-position:relative;
 }
 
 .available{
@@ -84,43 +83,46 @@ border:2px solid #aaa;
 background:#eee;
 }
 
-/* 상태 배지 */
-
-.statusBadge{
-position:absolute;
-top:8px;
-right:8px;
-padding:3px 10px;
-font-size:11px;
-border-radius:20px;
-font-weight:bold;
-}
-
-.badgeAvailable{
-background:#dff5df;
-color:#2e7d32;
-}
-
-.badgeReserved{
-background:#f9dede;
-color:#b71c1c;
+.timeRow{
+display:flex;
+justify-content:space-between;
+align-items:center;
 }
 
 .timeUTC{
 font-weight:bold;
 font-size:15px;
-margin-bottom:2px;
+}
+
+.statusAvailable{
+background:#dff5df;
+color:#2e7d32;
+padding:2px 10px;
+border-radius:20px;
+font-size:11px;
+font-weight:bold;
+}
+
+.statusReserved{
+background:#f9dede;
+color:#b71c1c;
+padding:2px 10px;
+border-radius:20px;
+font-size:11px;
+font-weight:bold;
 }
 
 .timeLocal{
 font-size:12px;
 color:#666;
+margin-top:2px;
 }
 
 .bookingInfo{
 font-size:12px;
 margin-top:6px;
 }
+
 .modal{
 display:none;
 position:fixed;
