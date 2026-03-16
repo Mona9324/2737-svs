@@ -51,7 +51,7 @@ document.getElementById("openTimer").innerText=
 setInterval(updateOpenTimer,60000)
 updateOpenTimer()
 
-/* LOAD SLOTS */
+/* FIREBASE LOAD */
 
 function loadSlots(){
 
@@ -76,6 +76,8 @@ function switchBuff(buff){
 currentBuff=buff
 loadSlots()
 }
+
+/* SLOT GENERATION */
 
 function generateSlots(data){
 
@@ -141,6 +143,8 @@ grid.appendChild(div)
 }
 
 }
+
+/* COUNT */
 
 function updateCounts(data){
 
@@ -277,8 +281,16 @@ closeCancelModal()
 const canvas=document.getElementById("snow")
 const ctx=canvas.getContext("2d")
 
+function resizeSnow(){
+
 canvas.width=window.innerWidth
 canvas.height=window.innerHeight
+
+}
+
+resizeSnow()
+
+window.addEventListener("resize",resizeSnow)
 
 let snowflakes=[]
 
