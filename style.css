@@ -9,6 +9,7 @@ body {
 header {
   padding: 20px 16px 10px;
   position: relative;
+  z-index: 1;
 }
 
 h1 {
@@ -21,8 +22,23 @@ h1 {
   margin-bottom: 12px;
 }
 
+.tabsWrap {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 18px;
+  position: relative;
+  z-index: 1;
+}
+
 .slotStats {
-  margin-top: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  flex-wrap: wrap;
+  margin-top: 2px;
   font-size: 18px;
 }
 
@@ -50,7 +66,8 @@ h1 {
   justify-content: center;
   gap: 10px;
   max-width: 920px;
-  margin: 18px auto 12px;
+  width: 100%;
+  margin: 18px auto 0;
   padding: 0 20px;
   box-sizing: border-box;
 }
@@ -84,6 +101,8 @@ h1 {
   margin: 0 auto 30px;
   padding: 20px;
   box-sizing: border-box;
+  position: relative;
+  z-index: 1;
 }
 
 .slot {
@@ -117,7 +136,15 @@ h1 {
 
 .slot.available:hover,
 .slot.reserved:hover {
-  transform: translateY(-1px);
+  transform: translateY(-2px);
+}
+
+.slot.available:hover {
+  background-color: #e9f8e9;
+}
+
+.slot.reserved:hover {
+  background-color: #f4dfdf;
 }
 
 .slot.selected.highlightAvailable {
@@ -133,11 +160,13 @@ h1 {
   justify-content: space-between;
   align-items: center;
   gap: 8px;
+  flex-wrap: nowrap;
 }
 
 .timeUTC {
   font-size: 15px;
   font-weight: 700;
+  white-space: nowrap;
 }
 
 .timeLocal {
@@ -167,7 +196,6 @@ h1 {
   word-break: break-word;
 }
 
-/* 모달은 기본 숨김 */
 .modal {
   display: none;
   position: fixed;
@@ -224,9 +252,9 @@ h1 {
 
 .adminFloating {
   position: fixed;
-  right: 20px;
-  bottom: 20px;
-  z-index: 900;
+  right: 22px;
+  bottom: 22px;
+  z-index: 1200;
   padding: 10px 12px;
   border: none;
   border-radius: 8px;
@@ -240,11 +268,21 @@ h1 {
   background: #6a96f4;
 }
 
-.adminPanel {
-  display: none;
+.adminOverlay {
   position: fixed;
-  top: 50%;
-  left: 50%;
+  inset: 0;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  z-index: 1300;
+  background: rgba(0, 0, 0, 0.28);
+}
+
+.adminOverlay.show {
+  display: flex;
+}
+
+.adminPanelBox {
   width: calc(100% - 32px);
   max-width: 340px;
   padding: 22px;
@@ -252,15 +290,9 @@ h1 {
   background: #fff;
   border-radius: 14px;
   box-shadow: 0 0 20px rgba(0, 0, 0, 0.22);
-  transform: translate(-50%, -50%);
-  z-index: 1001;
 }
 
-.adminPanel.show {
-  display: block;
-}
-
-.adminPanel h3 {
+.adminPanelBox h3 {
   margin-top: 0;
 }
 
@@ -280,7 +312,7 @@ h1 {
 
 #adminControls button,
 #adminLogin button,
-.adminPanel > button {
+.adminPanelBox > button {
   padding: 10px 12px;
   border: none;
   border-radius: 8px;
@@ -292,7 +324,7 @@ h1 {
 
 #adminControls button:hover,
 #adminLogin button:hover,
-.adminPanel > button:hover {
+.adminPanelBox > button:hover {
   background: #6a96f4;
 }
 
@@ -310,140 +342,27 @@ h1 {
   z-index: 0;
 }
 
-header,
-.tabs,
-.grid,
-.adminFloating,
-.adminPanel {
-  position: relative;
-  z-index: 1;
-}
-
 #rankingBox {
-  position: absolute;
-  top: 10px;
-  right: 16px;
-  width: 220px;
+  width: 100%;
+  max-width: 920px;
+  margin: 14px auto 0;
   background: rgba(255, 255, 255, 0.95);
-  padding: 10px 12px;
+  padding: 12px 14px;
   border-radius: 10px;
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.12);
   text-align: left;
+  box-sizing: border-box;
 }
 
 .rankingTitle {
   font-weight: 700;
   margin-bottom: 8px;
-}
-
-.rankingItem {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  padding: 2px 0;
-  font-size: 14px;
-}
-
-.rankingItem span {
-  min-width: 18px;
-  font-weight: 700;
-}
-
-@media (max-width: 980px) {
-  #rankingBox {
-    position: static;
-    width: auto;
-    max-width: 320px;
-    margin: 12px auto 0;
-  }
-}
-
-@media (max-width: 820px) {
-  .grid {
-    grid-template-columns: repeat(3, minmax(0, 1fr));
-  }
-}
-
-@media (max-width: 620px) {
-  .tabs {
-    flex-direction: column;
-  }
-
-  .grid {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-  }
-
-  .slotStats {
-    line-height: 1.8;
-  }
-}
-
-/* ===== layout adjustments ===== */
-
-.tabsWrap {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 10px;
-  margin-bottom: 18px;
-}
-
-.slotStats {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 10px;
-  flex-wrap: wrap;
-}
-
-/* Admin button: bottom right */
-.adminFloating {
-  position: fixed !important;
-  right: 22px !important;
-  bottom: 22px !important;
-  left: auto !important;
-  transform: none !important;
-  z-index: 1200;
-}
-
-/* Admin popup: centered */
-.adminOverlay {
-  position: fixed;
-  inset: 0;
-  display: none;
-  align-items: center;
-  justify-content: center;
-  z-index: 1300;
-  background: rgba(0, 0, 0, 0.28);
-}
-
-.adminOverlay.show {
-  display: flex;
-}
-
-.adminOverlay .adminPanel {
-  position: relative !important;
-  left: auto !important;
-  right: auto !important;
-  bottom: auto !important;
-  top: auto !important;
-  margin: 0;
-  z-index: 1301;
-}
-
-#adminControls {
-  flex-direction: column;
-  gap: 10px;
-}
-
-/* ranking */
-#rankingBox {
-  margin-top: 14px;
+  text-align: center;
 }
 
 .rankingGrid {
   display: grid;
-  grid-template-columns: repeat(3, minmax(220px, 1fr));
+  grid-template-columns: repeat(3, minmax(0, 1fr));
   gap: 14px;
   margin-top: 10px;
 }
@@ -465,6 +384,7 @@ header,
   align-items: center;
   gap: 8px;
   margin: 6px 0;
+  font-size: 14px;
   line-height: 1.4;
 }
 
@@ -476,60 +396,44 @@ header,
 .medal {
   min-width: 24px;
   text-align: center;
+  font-weight: 700;
 }
 
 .rankingText {
   word-break: break-word;
 }
 
-/* slot card hover highlight */
-.slot.available:hover {
-  cursor: pointer;
+@media (max-width: 980px) {
+  #rankingBox {
+    max-width: 920px;
+    width: calc(100% - 32px);
+  }
 }
 
-.slot.reserved:hover {
-  cursor: pointer;
-}
-
-.slot.available:hover,
-.slot.highlightAvailable,
-.slot.selected.highlightAvailable {
-  transform: translateY(-2px);
-}
-
-.slot.reserved:hover,
-.slot.highlightReserved,
-.slot.selected.highlightReserved {
-  transform: translateY(-2px);
-}
-
-/* time row */
-.timeRow {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 10px;
-  flex-wrap: nowrap;
-}
-
-.timeUTC {
-  white-space: nowrap;
-}
-
-/* responsive */
 @media (max-width: 900px) {
   .rankingGrid {
     grid-template-columns: 1fr;
   }
 }
 
+@media (max-width: 820px) {
+  .grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+
 @media (max-width: 640px) {
   .tabs {
     width: 100%;
+    flex-direction: column;
   }
 
   .tabs button {
     width: 100%;
+  }
+
+  .grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 
   .timeRow {
@@ -538,6 +442,7 @@ header,
   }
 
   .slotStats {
+    line-height: 1.8;
     font-size: 0.95rem;
   }
 }
