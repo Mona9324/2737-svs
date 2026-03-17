@@ -802,57 +802,47 @@ function confirmBooking() {
   var player = playerEl.value.trim();
   var daysSavedRaw = daysSavedEl.value.trim();
   var password = passwordEl.value;
-  var validationError = validateBookingInput(alliance, player, daysSavedRaw, password);
 
+  var validationError = validateBookingInput(alliance, player, daysSavedRaw, password);
   if (validationError) {
     showToast(validationError, "error");
     return;
   }
 
   var daysSaved = Number(daysSavedRaw);
-  var docRef = db.collection("slots").doc(selectedSlot);
   var playerNorm = normalizeText(player);
+  var docRef = db.collection("slots").doc(selectedSlot);
+
+  var duplicateQuery = db.collection("slots")
+    .where("buff", "==", currentBuff)
+    .where("playerNormalized", "==", playerNorm)
+    .limit(1);
 
   db.runTransaction(function (transaction) {
-    return transaction.get(docRef).then(function (doc) {
-      if (doc.exists) {
+    return transaction.get(docRef).then(function (slotDoc) {
+      if (slotDoc.exists) {
         throw new Error("ALREADY_RESERVED");
       }
 
-      return transaction.get(db.collection("slots"))
-        .then(function (snapshot) {
-          var duplicate = false;
-          snapshot.forEach(function (item) {
-            var data = item.data();
-            if (
-              data &&
-              data.buff === currentBuff &&
-              normalizeText(data.player) === playerNorm
-            ) {
-              duplicate = true;
-            }
-          });
+      return transaction.get(duplicateQuery).then(function (dupSnapshot) {
+        if (!dupSnapshot.empty) {
+          throw new Error("PLAYER_ALREADY_BOOKED");
+        }
 
-          if (duplicate) {
-            throw new Error("PLAYER_ALREADY_BOOKED");
-          }
-
-          var payload = {
-            alliance: alliance,
-            player: player,
-            playerNormalized: playerNorm,
-            daysSaved: daysSaved,
-            passwordHash: simpleHash(password),
-            buff: currentBuff,
-            utcSlot: selectedSlot.replace(currentBuff + "_", ""),
-            createdAt: firebase.firestore.FieldValue.serverTimestamp(),
-            updatedAt: firebase.firestore.FieldValue.serverTimestamp(),
-            adminNote: "",
-            status: "reserved"
-          };
-
-          transaction.set(docRef, payload);
+        transaction.set(docRef, {
+          alliance: alliance,
+          player: player,
+          playerNormalized: playerNorm,
+          daysSaved: daysSaved,
+          passwordHash: simpleHash(password),
+          buff: currentBuff,
+          utcSlot: selectedSlot.replace(currentBuff + "_", ""),
+          createdAt: firebase.firestore.FieldValue.serverTimestamp(),
+          updatedAt: firebase.firestore.FieldValue.serverTimestamp(),
+          adminNote: "",
+          status: "reserved"
         });
+      });
     });
   })
     .then(function () {
@@ -878,6 +868,7 @@ function confirmBooking() {
     })
     .catch(function (error) {
       console.error("confirmBooking error:", error);
+
       if (error.message === "ALREADY_RESERVED") {
         showToast("이미 예약된 슬롯입니다.", "error");
       } else if (error.message === "PLAYER_ALREADY_BOOKED") {
