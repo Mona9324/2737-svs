@@ -634,39 +634,98 @@ h1 {
     position: static;
     justify-content: center;
     flex-wrap: wrap;
-    margin-top: 18px;
-  }
-}
-
-@media (max-width: 900px) {
-  .grid {
-    grid-template-columns: repeat(3, minmax(0, 1fr));
-  }
-
-  .tabs button {
-    font-size: 15px;
+    margin-top: 14px;
   }
 }
 
 @media (max-width: 700px) {
+  header {
+    padding: 14px 12px 8px;
+  }
+
+  h1 {
+    font-size: 24px;
+    margin: 0 0 8px;
+  }
+
+  #countdown {
+    font-size: 14px;
+    margin-bottom: 8px;
+    line-height: 1.35;
+  }
+
+  .headlineCountdown {
+    font-size: 16px;
+    margin-bottom: 6px;
+    line-height: 1.35;
+  }
+
+  .subInfo {
+    font-size: 13px;
+    line-height: 1.4;
+    margin-bottom: 2px;
+  }
+
+  .creatorBadge {
+    margin: 4px 0 10px;
+  }
+
+  .creatorAvatar {
+    width: 76px;
+    height: 76px;
+  }
+
+  .creatorCredit {
+    margin-top: 6px;
+    font-size: 12px;
+  }
+
   .tabs {
     grid-template-columns: 1fr;
+    margin-top: 12px;
+    padding: 0 14px;
   }
 
   .grid {
     grid-template-columns: repeat(2, minmax(0, 1fr));
+    padding: 14px;
+    gap: 12px;
   }
 
   .headerToolbar {
     flex-direction: column;
     align-items: stretch;
     max-width: 360px;
-    margin: 18px auto 0;
+    margin: 14px auto 0;
+    gap: 8px;
+  }
+
+  .headerToolbar input,
+  .headerToolbar select,
+  .headerToolbar button {
+    padding: 9px 11px;
   }
 
   .headerToolbar input,
   .headerToolbar select {
     width: 100%;
+  }
+
+  .slot {
+    min-height: 116px;
+    padding: 12px;
+  }
+
+  .timeUTC {
+    font-size: 16px;
+  }
+
+  .bookingInfo {
+    font-size: 13px;
+  }
+
+  .bookingInfo.compact {
+    font-size: 14px;
   }
 
   .adminPanel {
@@ -695,45 +754,28 @@ h1 {
   }
 
   .slotStats {
-    line-height: 1.8;
-    font-size: 0.95rem;
+    line-height: 1.7;
+    font-size: 14px;
   }
 
   h1 {
-    font-size: 24px;
+    font-size: 22px;
   }
-}
 
-h1 {
-  margin: 0 0 10px;
-  font-size: 28px;
-}
+  .creatorAvatar {
+    width: 70px;
+    height: 70px;
+  }
 
-.headlineCountdown {
-  font-size: 18px;
-  font-weight: 700;
-  margin-bottom: 8px;
-  color: #1f2937;
-}
+  .toastContainer {
+    top: 12px;
+    right: 12px;
+    left: 12px;
+    align-items: stretch;
+  }
 
-#countdown {
-  font-size: 15px;
-  font-weight: 700;
-  margin-bottom: 10px;
-  color: #374151;
-}
-
-.creatorBadge {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  margin: 6px 0 12px;
-}
-
-.subInfo {
-  font-size: 14px;
-  color: #5b6470;
-  margin-bottom: 4px;
-  line-height: 1.45;
+  .toast {
+    min-width: auto;
+    max-width: none;
+  }
 }
