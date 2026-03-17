@@ -174,16 +174,44 @@ function updateTabBookingStateText() {
   if (!el) return;
 
   var setting = getTabSetting(currentBuff);
-  var open = isBuffBookingOpen(currentBuff);
-  var parts = [
-    "Current tab: " + currentBuff,
-    open ? "Booking Open" : "Booking Closed"
-  ];
+  var now = new Date();
+  var openAt = parseLocalDateTime(setting.openAt);
+  var closeAt = parseLocalDateTime(setting.closeAt);
+  var manualOpen = setting.manualOpen;
 
-  if (setting.openAt) parts.push("Open At: " + setting.openAt.replace("T", " "));
-  if (setting.closeAt) parts.push("Close At: " + setting.closeAt.replace("T", " "));
+  if (!manualOpen) {
+    el.textContent = "Booking locked by admin";
+    return;
+  }
 
-  el.textContent = parts.join(" / ");
+  if (openAt && now < openAt) {
+    var diff = openAt - now;
+    var d = Math.floor(diff / (1000 * 60 * 60 * 24));
+    var h = Math.floor((diff / (1000 * 60 * 60)) % 24);
+    var m = Math.floor((diff / (1000 * 60)) % 60);
+
+    el.textContent =
+      "Booking opens in " + d + "d " + h + "h " + m + "m";
+    return;
+  }
+
+  if (closeAt && now > closeAt) {
+    el.textContent = "Booking closed";
+    return;
+  }
+
+  if (closeAt && now <= closeAt) {
+    var remain = closeAt - now;
+    var rd = Math.floor(remain / (1000 * 60 * 60 * 24));
+    var rh = Math.floor((remain / (1000 * 60 * 60)) % 24);
+    var rm = Math.floor((remain / (1000 * 60)) % 60);
+
+    el.textContent =
+      "Booking closes in " + rd + "d " + rh + "h " + rm + "m";
+    return;
+  }
+
+  el.textContent = "Booking open";
 }
 
 function getBaseDate() {
@@ -1371,11 +1399,16 @@ auth.onAuthStateChanged(function (user) {
 });
 
 window.addEventListener("resize", resizeCanvas);
-setInterval(updateCountdown, 60000);
+setInterval(refreshTimeTexts, 60000);
 
-updateCountdown();
+refreshTimeTexts();
 setActiveTab();
 renderAllianceSuggestions();
 initSnow();
 drawSnow();
 loadSlots();
+
+function refreshTimeTexts() {
+  updateCountdown();
+  updateTabBookingStateText();
+}
