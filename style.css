@@ -612,3 +612,16 @@ h1 {
     font-size: 0.95rem;
   }
 }
+
+.bookingInfo.compact {
+  margin-top: 10px;
+  font-size: 15px;
+  line-height: 1.35;
+  font-weight: 600;
+  word-break: break-word;
+}
+
+.bookingMeta {
+  font-weight: 700;
+  color: #6b7280;
+}
