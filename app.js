@@ -232,9 +232,7 @@ function updateCountdown() {
       String(svsDate.getUTCHours()).padStart(2, "0") + ":" +
       String(svsDate.getUTCMinutes()).padStart(2, "0") + " UTC";
 
-    var localText = svsDate.toLocaleString();
-
-    cycleInfo.textContent = "28-day cycle / Next SVS: " + utcText + " / Local: " + localText;
+    cycleInfo.textContent = "28-day cycle / Next SVS: " + utcText;
   }
 }
 
