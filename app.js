@@ -215,7 +215,8 @@ function updateCountdown() {
 
   var countdown = document.getElementById("countdown");
   if (countdown) {
-    countdown.innerText = "Next SVS begins in " + d + "d " + h + "h " + m + "m";
+    countdown.innerText =
+      "Next SVS begins in " + d + "d " + h + "h " + m + "m";
   }
 }
 
