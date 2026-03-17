@@ -702,3 +702,37 @@ h1 {
     font-size: 24px;
   }
 }
+
+h1 {
+  margin: 0 0 10px;
+  font-size: 28px;
+}
+
+.headlineCountdown {
+  font-size: 18px;
+  font-weight: 700;
+  margin-bottom: 8px;
+  color: #1f2937;
+}
+
+#countdown {
+  font-size: 15px;
+  font-weight: 700;
+  margin-bottom: 10px;
+  color: #374151;
+}
+
+.creatorBadge {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  margin: 6px 0 12px;
+}
+
+.subInfo {
+  font-size: 14px;
+  color: #5b6470;
+  margin-bottom: 4px;
+  line-height: 1.45;
+}
