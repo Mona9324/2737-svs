@@ -227,7 +227,7 @@ function updateCountdown() {
       String(svsDate.getUTCHours()).padStart(2, "0") + ":" +
       String(svsDate.getUTCMinutes()).padStart(2, "0") + " UTC";
 
-    cycleInfo.textContent = "28-day cycle / Next SVS: " + utcText;
+    cycleInfo.textContent = "Next SVS: " + utcText;
   }
 }
 
@@ -273,9 +273,19 @@ function updateTabBookingStateText() {
   el.textContent = "Booking open";
 }
 
+function updateBookingGuide() {
+  var guide = document.getElementById("bookingGuide");
+  if (!guide) return;
+
+  guide.textContent =
+    "Day 1 (Thu): 30d+ speed-up / Day 2 (Fri): 15d+ speed-up / Day 3+: Free booking"
+    "1일차: 가속 30일 이상 / 2일차: 가속 15일 이상 / 3일차부터 자유 예약";
+}
+
 function refreshTimeTexts() {
   updateCountdown();
   updateTabBookingStateText();
+  updateBookingGuide();
 }
 
 /* =========================
