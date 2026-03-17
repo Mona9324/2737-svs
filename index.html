@@ -19,20 +19,18 @@
     <div id="countdown"></div>
     <div id="svsCycleInfo" class="subInfo"></div>
     <div id="tabBookingState" class="subInfo"></div>
-  </header>
 
-  <section class="topToolbarWrap">
-    <div class="toolbar toolbarTopRight">
-      <input id="searchInput" type="text" placeholder="Search alliance / player">
-      <select id="filterStatus" onchange="renderAll()">
-        <option value="all">All</option>
-        <option value="available">Available only</option>
-        <option value="reserved">Reserved only</option>
-        <option value="mine">My reservation only</option>
-      </select>
-      <button type="button" onclick="clearSearch()">Clear</button>
-    </div>
-  </section>
+    <div class="headerToolbar">
+  <input id="searchInput" type="text" placeholder="Search alliance / player">
+  <select id="filterStatus" onchange="renderAll()">
+    <option value="all">All</option>
+    <option value="available">Available only</option>
+    <option value="reserved">Reserved only</option>
+    <option value="mine">My reservation only</option>
+  </select>
+  <button type="button" onclick="clearSearch()">Clear</button>
+</div>
+  </header>
 
   <section class="tabsWrap">
     <div class="tabs">
