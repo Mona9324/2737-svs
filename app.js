@@ -257,7 +257,7 @@ function updateCountdown() {
 }
 
 function updateTabBookingStateText() {
-  var el = document.getElementById("tabBookingState");
+  var el = document.getElementById("bookingCloseText");
   if (!el) return;
 
   var setting = getTabSetting(currentBuff);
@@ -266,7 +266,7 @@ function updateTabBookingStateText() {
   var closeAt = parseLocalDateTime(setting.closeAt);
 
   if (!setting.manualOpen) {
-    el.textContent = "Booking locked by admin";
+    el.textContent = "🔒 Booking locked by admin";
     return;
   }
 
@@ -276,12 +276,12 @@ function updateTabBookingStateText() {
     var h = Math.floor((diff / (1000 * 60 * 60)) % 24);
     var m = Math.floor((diff / (1000 * 60)) % 60);
 
-    el.textContent = "Booking opens in " + d + "d " + h + "h " + m + "m";
+    el.textContent = "⏳ Booking opens in " + d + "d " + h + "h " + m + "m";
     return;
   }
 
   if (closeAt && now > closeAt) {
-    el.textContent = "Booking closed";
+    el.textContent = "⛔ Booking closed";
     return;
   }
 
@@ -291,11 +291,11 @@ function updateTabBookingStateText() {
     var rh = Math.floor((remain / (1000 * 60 * 60)) % 24);
     var rm = Math.floor((remain / (1000 * 60)) % 60);
 
-    el.textContent = "Booking closes in " + rd + "d " + rh + "h " + rm + "m";
+    el.textContent = "⏳ Booking closes in " + rd + "d " + rh + "h " + rm + "m";
     return;
   }
 
-  el.textContent = "Booking open";
+  el.textContent = "✅ Booking open";
 }
 
 function updateBookingGuide() {
@@ -303,6 +303,7 @@ function updateBookingGuide() {
   if (!guide) return;
 
   guide.innerHTML =
+    '<div id="bookingCloseText" class="bookingCloseText"></div>' +
     '<div class="bookingGuideRow">' +
       '<div class="bookingGuideCol">Day 1 (Thu): 30d+ speed-up</div>' +
       '<div class="bookingGuideCol">1일차 (목): 가속 30일 이상</div>' +
@@ -319,10 +320,12 @@ function updateBookingGuide() {
       '<div class="bookingGuideCol">After the reservation site closes, please contact the Minister of the Interior or the President regarding any open slots.</div>' +
       '<div class="bookingGuideCol">예약 사이트가 닫히고 빈자리에 관해서는 내무부장관이나 집행관에게 문의해주세요.</div>' +
     '</div>';
+
+  updateTabBookingStateText();
 }
+
 function refreshTimeTexts() {
   updateCountdown();
-  updateTabBookingStateText();
   updateBookingGuide();
 }
 
