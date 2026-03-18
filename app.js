@@ -147,6 +147,31 @@ function getMyBookingInfo() {
   }
 }
 
+function updateSavedBookingInfoField(field, value) {
+  var mine = getMyBookingInfo() || { alliance: "", player: "" };
+
+  if (field === "alliance") mine.alliance = value || "";
+  if (field === "player") mine.player = value || "";
+
+  saveMyBookingInfo(mine.alliance, mine.player);
+}
+
+function fillSavedBookingIdentity() {
+  var mine = getMyBookingInfo();
+  if (!mine) return;
+
+  var allianceEl = document.getElementById("alliance");
+  var playerEl = document.getElementById("player");
+
+  if (allianceEl && mine.alliance) {
+    allianceEl.value = mine.alliance;
+  }
+
+  if (playerEl && mine.player) {
+    playerEl.value = mine.player;
+  }
+}
+
 function isMyReservation(slot) {
   var mine = getMyBookingInfo();
   if (!mine || !slot) return false;
@@ -272,7 +297,7 @@ function updateBookingGuide() {
   guide.innerHTML =
     "Day 1 (Thu): 30d+ speed-up / Day 2 (Fri): 15d+ speed-up / Day 3+: Free booking" +
     "<br>" +
-    "1일차 (목): 가속 30일 이상 / 2일차 (금): 가속 15일 이상 / 3일차부터 자유 예약";
+    "1일차: 가속 30일 이상 / 2일차: 가속 15일 이상 / 3일차부터 자유 예약";
 }
 
 function refreshTimeTexts() {
@@ -356,13 +381,27 @@ function openReserveModal(id) {
   var info = document.getElementById("selectedSlotInfo");
   if (info) info.innerHTML = formatSlotInfo(id);
 
+  fillSavedBookingIdentity();
+
+  var daysSavedEl = document.getElementById("daysSaved");
+  var passwordEl = document.getElementById("password");
+
+  if (daysSavedEl) daysSavedEl.value = "";
+  if (passwordEl) passwordEl.value = "";
+
   document.getElementById("modal").classList.add("show");
+
+  if (daysSavedEl) {
+    daysSavedEl.focus();
+  } else if (passwordEl) {
+    passwordEl.focus();
+  }
 }
 
 function closeModal() {
   document.getElementById("modal").classList.remove("show");
 
-  ["alliance", "player", "daysSaved", "password"].forEach(function (id) {
+  ["daysSaved", "password"].forEach(function (id) {
     var el = document.getElementById(id);
     if (el) el.value = "";
   });
@@ -1502,6 +1541,20 @@ var searchInput = document.getElementById("searchInput");
 if (searchInput) {
   searchInput.addEventListener("input", function () {
     renderAll();
+  });
+}
+
+var allianceInput = document.getElementById("alliance");
+if (allianceInput) {
+  allianceInput.addEventListener("input", function () {
+    updateSavedBookingInfoField("alliance", allianceInput.value.trim());
+  });
+}
+
+var playerInput = document.getElementById("player");
+if (playerInput) {
+  playerInput.addEventListener("input", function () {
+    updateSavedBookingInfoField("player", playerInput.value.trim());
   });
 }
 
