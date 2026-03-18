@@ -1458,6 +1458,62 @@ function loadLogs() {
     );
 }
 
+function convertLogValue(value) {
+  if (value === undefined || value === null) return "";
+
+  if (typeof value === "object") {
+    try {
+      return JSON.stringify(value);
+    } catch (e) {
+      return String(value);
+    }
+  }
+
+  return String(value);
+}
+
+function downloadLogsCSV() {
+  if (!adminAuthenticated) return;
+
+  db.collection("logs")
+    .orderBy("createdAt", "desc")
+    .limit(500)
+    .get()
+    .then(function (snapshot) {
+      var rows = [[
+        "Type",
+        "Time",
+        "Actor Email",
+        "Actor UID",
+        "Payload"
+      ]];
+
+      snapshot.forEach(function (doc) {
+        var data = doc.data();
+        var timeText = "";
+
+        if (data.createdAt && data.createdAt.toDate) {
+          timeText = data.createdAt.toDate().toLocaleString();
+        }
+
+        rows.push([
+          data.type || "",
+          timeText,
+          data.actorEmail || "",
+          data.actorUid || "",
+          convertLogValue(data.payload || {})
+        ]);
+      });
+
+      downloadCSV("svs_admin_logs.csv", rows);
+      showToast("관리자 로그를 다운로드했습니다.", "success");
+    })
+    .catch(function (error) {
+      console.error("downloadLogsCSV error:", error);
+      showToast("관리자 로그 다운로드 중 오류가 발생했습니다.", "error");
+    });
+}
+
 /* =========================
    secret admin trigger
 ========================= */
