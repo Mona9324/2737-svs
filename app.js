@@ -1394,9 +1394,6 @@ function exportSlotsWorkbook(filename, keys) {
   appendSheetFromRows(workbook, "Tuesday", tuesdayRows);
   appendSheetFromRows(workbook, "Thursday", thursdayRows);
 
-  var allianceSummaryRows = buildAllianceSummaryRows(slotRows);
-  appendSheetFromRows(workbook, "Alliance Summary", allianceSummaryRows);
-
   XLSX.writeFile(workbook, filename);
 }
 
